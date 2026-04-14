@@ -159,13 +159,32 @@ PYTHONPATH=acousticgender .venv/bin/python acousticgender/corpusanalysis.py \
 - 男声 0.29–0.63，女声 0.48–0.88
 - ⚠️ held-out 取自训练池末尾，存在 leakage；后续如需严格泛化评估，应再采样独立子集。
 
-### 7.6 可选：`weights_zh.json` — [待做]
+### 7.6 `weights_zh.json` 向量化 + k-fold 暴力搜索 — [完成]
+
+重写 `corpusanalysis.py` 末尾的暴力搜索：
+
+- **预计算 z-score**（只算一次，脱离 weights 循环）：先调一次 `compute_resonance` 触发 outlier removal + `F_stdevs` 填充，再抽每 utt 的 `(n_valid_phones, 3)` z 数组。
+- **向量化扫描**：`R = clip(Z @ W.T + 0.5, 0, 1).mean(axis=0)`，一次 matmul 评完所有 candidate，numpy 自动走 BLAS 多核。
+- **K-fold CV**：`--weights-kfold 10`；每折用 train median 作阈值，在 test 上算 acc；`score = mean_acc - 1e-6*std_acc` 选 mean 最高、并列取 std 最小。
+- **Coarse-to-fine**：
+  - coarse: 单纯形均匀 `--weights-granularity 500` → 125,751 candidates
+  - refine: 在 coarse winner 周围 `±0.05` 盒子内 `--weights-refine-steps 201` → 8,120,601 candidates，归一化回单纯形
+- **分块**（避免 99 GB 爆内存）：`--weights-chunk 200000`，每块独立评估后仅保留全局最优 idx。
 
 ```bash
-python acousticgender/corpusanalysis.py --lang zh --jobs 8
+PYTHONPATH=acousticgender .venv/bin/python acousticgender/corpusanalysis.py \
+  --lang zh --jobs 8 --corpus-dir corpus --processed-dir corpus-processed-zh \
+  --stats-out stats_zh.json --weights-out weights_zh.json \
+  --weights-granularity 500 --weights-kfold 10 --weights-refine \
+  --weights-refine-steps 201 --weights-refine-half-width 0.05 --weights-chunk 200000
 ```
-- granularity=56 × 1770 候选 × 400 条，过夜级别。
-- `backend.cgi` 已支持 lang=zh 时优先读 `weights_zh.json`，缺失回退 `weights.json`。
+
+**结果**：
+- n_utts=268（m=134, f=134）
+- coarse winner `[0.658, 0.242, 0.1]` 10-fold mean_acc=0.8061, std=0.0770
+- refine 未找到严格更优点（coarse 已命中 201-grid 节点）
+- 最终 `weights_zh.json = [0.658, 0.242, 0.1]`
+- validate_zh.py held-out：**median(m)=0.510, median(f)=0.706, Δ=+0.196, acc=0.900** PASS（英文 weights `[0.73, 0.27, 0.0]` 下 acc=0.850）
 
 ### 状态
 
@@ -173,6 +192,6 @@ python acousticgender/corpusanalysis.py --lang zh --jobs 8
 - [x] M1 下载 + 解压 AISHELL-3
 - [x] M2 采样到 `./corpus/`（153 m + 153 f）
 - [x] M3 `--jobs` 并行化
-- [x] M4 生成新 `stats_zh.json`（114+114 实际入池）
-- [x] M5 验证 PASS（acc=0.85, Δmedian=0.206）
-- [ ] M6 （可选）`weights_zh.json` + tag v0.1.1
+- [x] M4 生成新 `stats_zh.json`（114+114 实际入池；M6 重跑后 134+134）
+- [x] M5 验证 PASS（EN weights: acc=0.85, Δmedian=0.206）
+- [x] M6 `weights_zh.json` 向量化 k-fold 暴力搜索（acc=0.900, Δmedian=0.196）+ tag v0.1.1
