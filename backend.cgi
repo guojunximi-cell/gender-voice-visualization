@@ -53,7 +53,12 @@ try:
 	data = phones.parse(praat_output, lang)
 	if not data.get('phones'):
 		raise RuntimeError("MFA produced no alignment output. Check MFA setup and models.")
-	weights = [0.7321428571428571, 0.26785714285714285, 0.0]
+	weights_file = 'weights_zh.json' if lang == 'zh' and os.path.exists('weights_zh.json') else 'weights.json'
+	try:
+		with open(weights_file) as wf:
+			weights = json.load(wf)
+	except Exception:
+		weights = [0.7321428571428571, 0.26785714285714285, 0.0]
 	resonance.compute_resonance(data, weights, lang)
 	print(json.dumps(data))
 except Exception as e:

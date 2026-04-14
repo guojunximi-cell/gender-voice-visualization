@@ -85,3 +85,94 @@ python serve.py
 # 浏览器打开 http://localhost:8888
 # UI 里切换为中文，再录音 / 上传
 ```
+
+---
+
+## 7. v0.1.1 — 语料重建 stats_zh.json
+
+v0.1.0 的 `stats_zh.json` 是人工按文献元音均值填的，stdev 不是"本管线 Praat 中点的测量分布"，导致 z-score 分母偏窄、resonance 跳动过大。v0.1.1 对齐英文版做法：跑真实语料库 → `corpusanalysis.py` 聚合 → 覆盖 `stats_zh.json`。详见 `CHANGELOG_ZH.md`。
+
+### 相对上一次提交（`9dd7536` v0.1.0）的具体差异
+
+| 类别 | 变化 |
+|------|------|
+| `stats_zh.json` | 手写文献值 (16 keys，仅元音) → AISHELL-3 实测聚合 (42+ keys，含辅音)；23 KB |
+| `acousticgender/corpusanalysis.py` | 新增 `argparse`：`--lang / --corpus-dir / --processed-dir / --stats-out / --weights-out / --skip-weights / --jobs`；抽出 `_process_one`，并行 `ProcessPoolExecutor`；per-worker `MFA_ROOT_DIR`（软链 `pretrained_models` 等）；接住 `preprocessing.process` 返回的 TSV 写入持久 `persist_dir`（绕开 `shutil.rmtree`）；聚合键用 `_strip_tone(phone['phoneme'])`（zh） |
+| `backend.cgi` | `lang=='zh'` 时优先加载 `weights_zh.json`，缺失回退 `weights.json` |
+| 新增 `tools/build_zh_corpus.py` | 采样 AISHELL-3 → `corpus/{m\|f}_<spk>_<utt>/`，round-robin、cap-per-speaker、OOV 过滤、`_manifest.json` |
+| 新增 `tools/validate_zh.py` | 末尾 20+20 held-out，断言 `median(m) < median(f)` 且 `acc ≥ 0.85` |
+| 新增 `CHANGELOG_ZH.md` | v0.1.0 vs v0.1.1 根因与修复记录 |
+| `README.md` | 新增本节（§7） |
+| `.gitignore` | 忽略 `corpus/`、`corpus-src/`、`corpus-processed-zh/`、`Miniconda3-*.sh` |
+| **未改动** | `resonance.py` 算法、`_strip_tone`、`ZH_VOWELS`、`phones.py`、前端任何文件 |
+
+效果：同一条管线下，男声 resonance 中位数 ~0.91（贴边 clamp）→ **0.507**，女声 **0.713**，Δ=+0.206，acc=0.85。
+
+### 7.1 下载 AISHELL-3 — [完成]
+
+- 来源：OpenSLR-93，`https://www.openslr.org/resources/93/data_aishell3.tgz`，~18 GB。
+- 为什么选它：218 speakers，`spk-info.txt` 有性别标签，44.1 kHz wav，逐句中文字符 transcript 与 `preprocessing.py` 的按字切分天然对齐。
+- 落盘：`corpus-src/aishell3/`（`/mnt/e`，剩余 381 GB 充足）。
+- 命令：
+  ```bash
+  mkdir -p corpus-src && cd corpus-src
+  wget -c https://www.openslr.org/resources/93/data_aishell3.tgz
+  tar xzf data_aishell3.tgz
+  ```
+
+### 7.2 采样到 `./corpus/` — [待做]
+
+目标：性别均衡 200 + 200 句，每说话人 ≤5 条。工具：`tools/build_zh_corpus.py`（待写）。
+
+- 解析 `spk-info.txt` → `{spk_id: gender}`；解析 `train/content.txt` → `{utt_id: chars}`。
+- 按 `[\u4e00-\u9fff]` 过滤、按 `mandarin_dict.txt` 预筛 OOV、round-robin 跨说话人抽样。
+- 输出目录：`corpus/{m|f}_{spk}_{utt}/{recording.wav, transcript.txt}`。
+- 记录 `corpus/_manifest.json` 保证可复现。
+
+### 7.3 `corpusanalysis.py` 并行化 — [待做]
+
+- 加 `--jobs N`，用 `ProcessPoolExecutor` 包住 preprocessing 调用。
+- 64 GB RAM 支持 8 workers × ~3 GB。
+- 预期 400 句从 ~50 min → ~8–10 min。
+
+### 7.4 生成新 `stats_zh.json` — [完成]
+
+```bash
+PYTHONPATH=acousticgender .venv/bin/python acousticgender/corpusanalysis.py \
+  --lang zh --jobs 8 --skip-weights \
+  --corpus-dir corpus --processed-dir corpus-processed-zh --stats-out stats_zh.json
+```
+- 关键修复：
+  - `_process_one` 接住 `preprocessing.process` 返回的 TSV 直接落盘到 `<dir>/output/recording.tsv`（原版会被 `shutil.rmtree(tmp_dir)` 删除）。
+  - 每 worker 独立 `MFA_ROOT_DIR`，`pretrained_models` / `models` / `extracted_models` 软链到默认 `~/Documents/MFA`，避免并发写 `command_history.yaml` 崩溃且不丢模型。
+- 实际跑：306 句、jobs=8，~44 min；238 ok / 67 fail，平衡到 114 m + 114 f。
+- 产物 `stats_zh.json` ~23 KB，自然包含辅音条目。
+
+### 7.5 验证 — [完成]
+
+```bash
+.venv/bin/python tools/validate_zh.py --processed corpus-processed-zh --holdout 20
+```
+结果：
+- median(m)=0.507, median(f)=0.713, Δ=+0.206
+- threshold=0.587, accuracy=0.850 → **PASS**
+- 男声 0.29–0.63，女声 0.48–0.88
+- ⚠️ held-out 取自训练池末尾，存在 leakage；后续如需严格泛化评估，应再采样独立子集。
+
+### 7.6 可选：`weights_zh.json` — [待做]
+
+```bash
+python acousticgender/corpusanalysis.py --lang zh --jobs 8
+```
+- granularity=56 × 1770 候选 × 400 条，过夜级别。
+- `backend.cgi` 已支持 lang=zh 时优先读 `weights_zh.json`，缺失回退 `weights.json`。
+
+### 状态
+
+- [x] M0 代码骨架：`corpusanalysis.py` 加 `--lang`；`backend.cgi` 按 lang 选 weights
+- [x] M1 下载 + 解压 AISHELL-3
+- [x] M2 采样到 `./corpus/`（153 m + 153 f）
+- [x] M3 `--jobs` 并行化
+- [x] M4 生成新 `stats_zh.json`（114+114 实际入池）
+- [x] M5 验证 PASS（acc=0.85, Δmedian=0.206）
+- [ ] M6 （可选）`weights_zh.json` + tag v0.1.1
