@@ -74,41 +74,50 @@ def process(uploaded_file, transcript, tmp_dir, lang='en'):
 		corpus_dir + '/recording.wav'
 	])
 
+	if lang == 'zh':
+		import re as _re
+		han_chars = _re.findall(r'[\u4e00-\u9fff]', transcript)
+		transcript_out = ' '.join(han_chars)
+	else:
+		transcript_out = transcript
+
 	with open(corpus_dir + '/recording.txt', 'w', encoding='utf-8') as f:
-		f.write(transcript)
+		f.write(transcript_out)
 
 	mfa_model = 'mandarin_mfa' if lang == 'zh' else 'english_mfa'
-	# Derive python.exe and mfa-script.py from settings['mfa'] path
-	# e.g.  .../envs/mfa/Scripts/mfa.exe  →  .../envs/mfa/python.exe
-	#                                      →  .../envs/mfa/Scripts/mfa-script.py
+
 	scripts_dir = os.path.dirname(settings['mfa'])
 	env_dir     = os.path.dirname(scripts_dir)
-	mfa_python  = os.path.join(env_dir, 'python.exe')
-	mfa_script  = os.path.join(scripts_dir, 'mfa-script.py')
+	mfa_env     = os.environ.copy()
 
-	# Build an environment with the conda env's Library/bin on PATH
-	# so that kaldi DLLs and other native libraries can be found.
-	mfa_env = os.environ.copy()
-	path_additions = os.pathsep.join([
-		os.path.join(env_dir, 'Library', 'bin'),
-		os.path.join(env_dir, 'Library', 'mingw-w64', 'bin'),
-		os.path.join(env_dir, 'Library', 'usr', 'bin'),
-		os.path.join(env_dir, 'Scripts'),
-		env_dir,
-	])
-	mfa_env['PATH'] = path_additions + os.pathsep + mfa_env.get('PATH', '')
+	if sys.platform == 'win32':
+		# Windows conda layout: env/Scripts/mfa.exe + env/python.exe
+		mfa_python = os.path.join(env_dir, 'python.exe')
+		mfa_script = os.path.join(scripts_dir, 'mfa-script.py')
+		mfa_cmd    = [mfa_python, mfa_script]
+		path_additions = os.pathsep.join([
+			os.path.join(env_dir, 'Library', 'bin'),
+			os.path.join(env_dir, 'Library', 'mingw-w64', 'bin'),
+			os.path.join(env_dir, 'Library', 'usr', 'bin'),
+			os.path.join(env_dir, 'Scripts'),
+			env_dir,
+		])
+		mfa_env['PATH'] = path_additions + os.pathsep + mfa_env.get('PATH', '')
+	else:
+		# Linux/macOS conda layout: env/bin/mfa (shell shim) + env/bin/python
+		mfa_cmd = [settings['mfa']]
+		mfa_env['PATH'] = scripts_dir + os.pathsep + mfa_env.get('PATH', '')
+
 	mfa_env['CONDA_PREFIX'] = env_dir
 
 	cwd = os.getcwd()
 	os.chdir(tmp_dir)
 
-	print(f"[MFA] python: {mfa_python}", file=sys.stderr)
-	print(f"[MFA] script: {mfa_script}", file=sys.stderr)
-	print(f"[MFA] exists python: {os.path.exists(mfa_python)}", file=sys.stderr)
-	print(f"[MFA] exists script: {os.path.exists(mfa_script)}", file=sys.stderr)
+	print(f"[MFA] cmd: {mfa_cmd}", file=sys.stderr)
+	print(f"[MFA] env_dir: {env_dir} (exists: {os.path.isdir(env_dir)})", file=sys.stderr)
 	try:
 		mfa_out = subprocess.check_output(
-			[mfa_python, mfa_script, 'align',
+			mfa_cmd + ['align',
 			 './corpus/', mfa_model, mfa_model, './output/', '--clean',
 			 '--beam', '100', '--retry_beam', '400'],
 			stderr=subprocess.STDOUT,

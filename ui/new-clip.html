@@ -263,6 +263,10 @@
 				$('button.new-clip').classList.remove('hidden');
 				$('button.new-clip + .spinner').classList.add('hidden');
 
+				if (data.error) {
+					console.error('backend error:', data.error, '\n', data.trace);
+					throw new Error(data.error);
+				}
 				console.assert(data.hasOwnProperty('phones') && data.phones.length > 0);
 				
 				clip.loadResponse(data);

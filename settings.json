@@ -1,9 +1,9 @@
 {
 	"dev"        : true,
 	"logs"       : "",
-	"recordings" : "C:/Users/fanhe/gender-voice-rec/",
-	"ffmpeg"     : "C:/Users/fanhe/.conda/envs/mfa/Library/bin/ffmpeg.exe",
-	"sox"        : "C:/Users/fanhe/.conda/envs/mfa/Library/bin/sox.exe",
-	"mfa"        : "C:/Users/fanhe/.conda/envs/mfa/Scripts/mfa.exe",
-	"praat"      : "C:/Users/fanhe/praat/Praat.exe"
+	"recordings" : "/tmp/gender-voice-rec/",
+	"ffmpeg"     : "/usr/bin/ffmpeg",
+	"sox"        : "/usr/bin/sox",
+	"mfa"        : "/home/yaya/miniconda3/envs/mfa/bin/mfa",
+	"praat"      : "/usr/bin/praat"
 }
