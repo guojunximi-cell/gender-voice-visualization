@@ -44,29 +44,21 @@
 		#upload-file:checked   + label + div { display: block;}
 	</style>
 
-	<h2 data-i18n="newClip.heading">Add a Clip</h2>
+	<h2 data-i18n="newClip.heading">添加片段</h2>
 
 	<div class="hbox">
-		<label for="title-input" data-i18n="newClip.title">Title</label>
-		<input type="text" id="title-input" value="Untitled"/>
+		<label for="title-input" data-i18n="newClip.title">标题</label>
+		<input type="text" id="title-input" value="未命名"/>
 
-		<label for="color-select" data-i18n="newClip.color">Color</label>
+		<label for="color-select" data-i18n="newClip.color">颜色</label>
 		<input type="color" id="color-select" value="#000000"/>
 	</div>
 
 	<br>
 
-	<!-- Language + Script selection -->
+	<!-- Script selection（中文单语：语言固定为 zh） -->
 	<div class="hbox">
-		<label for="lang-select" data-i18n="newClip.language">Language</label>
-		<select id="lang-select">
-			<option value="en">English</option>
-			<option value="zh">中文</option>
-		</select>
-	</div>
-	<br>
-	<div class="hbox">
-		<label for="script-select" data-i18n="newClip.script">Script </label>
+		<label for="script-select" data-i18n="newClip.script">文稿 </label>
 		<select class="script" id="script-select">
 			{% include 'speech-scripts.html' %}
 		</select>
@@ -81,26 +73,7 @@
 			return value.replace(/\s\s+/g, '\n').trim()
 		}
 
-		function filterScriptsByLang(lang) {
-			let select = $('#script-select');
-			let firstVisible = null;
-			Array.from(select.options).forEach(opt => {
-				let optLang = opt.dataset.lang || 'en';
-				let hide = optLang !== lang && opt.value !== 'custom';
-				opt.hidden = hide;
-				if (!hide && !firstVisible) firstVisible = opt;
-			});
-			if (firstVisible) {
-				select.value = firstVisible.value;
-				globalState.set('transcript', firstVisible.value === 'custom' ? '' : formatTranscript(firstVisible.value));
-			}
-		}
-
 		globalState.set('transcript', formatTranscript($('#script-select').value));
-
-		$('#lang-select').addEventListener('change', evt => {
-			filterScriptsByLang($('#lang-select').value);
-		});
 
 		$('#script-select').addEventListener('change', evt => {
 			let value = $('#script-select').value;
@@ -118,24 +91,24 @@
 
 	<!-- Upload Options -->
 	<input type="radio" name="add-recording" id="upload-file" checked>
-	<label for="upload-file" data-i18n="newClip.uploadFile">Upload a file</label>
+	<label for="upload-file" data-i18n="newClip.uploadFile">上传文件</label>
 	<div>
 		<input type='file' id='audio-file-input' name='recording'
 		capture="user" accept="audio/*,video/*,audio/mpeg,audio/mp4,audio/x-aiff,audio/ogg,audio/vorbis,audio/opus,audio/vnd.wav,.wav,.mp3,.ogg,.opus,.m4a,.webm"/>
 	</div>
 	<br>
 	<input type="radio" name="add-recording" id="record-voice">
-	<label for="record-voice" data-i18n="newClip.recordVoice">Record your voice</label>
+	<label for="record-voice" data-i18n="newClip.recordVoice">录制声音</label>
 	<div>
-		<button id="start-recording" data-i18n="newClip.start">⏺︎ Start</button>
-		<button id="stop-recording" data-i18n="newClip.stop">⏹︎ Stop</button>
-		<span data-i18n="newClip.recordedPrefix">Recorded</span> <span id="recording-count">0</span> <span data-i18n="newClip.recordedSuffix">seconds</span>
+		<button id="start-recording" data-i18n="newClip.start">⏺︎ 开始</button>
+		<button id="stop-recording" data-i18n="newClip.stop">⏹︎ 停止</button>
+		<span data-i18n="newClip.recordedPrefix">已录制</span> <span id="recording-count">0</span> <span data-i18n="newClip.recordedSuffix">秒</span>
 		<br>
 		<br>
 		<audio controls id="recording-preview"></audio>
 	</div>
 	<!-- Submit -->
-	<button id="submit" class='attention' onclick="submitAudio()" data-i18n="newClip.submit">Add Clip</button>
+	<button id="submit" class='attention' onclick="submitAudio()" data-i18n="newClip.submit">添加片段</button>
 	<script>
 	try {
 		// record from their microphone in-browser,
@@ -214,7 +187,7 @@
 			formData.append('referrer', document.referrer);
 			formData.append('screen-width', window.screen.width);
 			formData.append('screen-height', window.screen.height);
-			formData.append('lang', $('#lang-select').value);
+			formData.append('lang', 'zh');
 
 			clip.transcript = transcriptText;
 			clip.title = $('#title-input').value;
