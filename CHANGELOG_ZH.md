@@ -1,5 +1,16 @@
 # 中文适配版本记录
 
+## v0.1.2 —— Railway 部署支持
+
+新增 `Dockerfile` / `.dockerignore` / `railway.json`，`serve.py` 适配 `PORT` 环境变量。
+
+- 基于 `mambaorg/micromamba`，apt 装 ffmpeg/sox/praat/libmagic，conda 装 MFA。
+- 镜像构建时预下载 `english_mfa` 和 `mandarin_mfa` 声学模型 + 词典。
+- 容器内 `settings.json` 自动重写为容器路径，不影响本地开发配置。
+- 建议 Hobby 档（≥8GB RAM），免费档 512MB 跑 MFA 会 OOM。
+
+---
+
 ## v0.1.0（已发布）
 
 见 `README.md`。要点：

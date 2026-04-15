@@ -18,7 +18,10 @@ class Handler(SimpleHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/':
             self.path = '/index.html'
-        super().do_GET()
+        try:
+            super().do_GET()
+        except (BrokenPipeError, ConnectionResetError):
+            pass
 
     def do_POST(self):
         # 只处理 .cgi 的 POST 请求
@@ -91,7 +94,14 @@ class ReusableHTTPServer(HTTPServer):
     allow_reuse_address = True
 
 
-port = find_free_port()
-print(f"启动成功！请打开浏览器访问：http://localhost:{port}")
+env_port = os.environ.get('PORT')
+if env_port:
+    port = int(env_port)
+    bind_host = '0.0.0.0'
+    print(f"启动成功！监听 {bind_host}:{port}")
+else:
+    port = find_free_port()
+    bind_host = ''
+    print(f"启动成功！请打开浏览器访问：http://localhost:{port}")
 print("按 Ctrl+C 停止服务器")
-ReusableHTTPServer(('', port), Handler).serve_forever()
+ReusableHTTPServer((bind_host, port), Handler).serve_forever()

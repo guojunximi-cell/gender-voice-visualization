@@ -1,0 +1,11 @@
+.git
+.claude
+Miniconda3-latest-Linux-x86_64.sh
+corpus
+corpus-src
+corpus-processed-zh
+tools
+*.md
+__pycache__
+**/__pycache__
+*.pyc
