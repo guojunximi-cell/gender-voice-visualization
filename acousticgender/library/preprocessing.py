@@ -128,8 +128,10 @@ def process(uploaded_file, transcript, tmp_dir, lang='en'):
 		print("CalledProcessError", file=sys.stderr)
 		print(e, file=sys.stderr)
 		print(str(e.output, 'utf-8', errors='replace'), file=sys.stderr)
+		raise RuntimeError("MFA align failed: " + str(e.output, 'utf-8', errors='replace')[-800:])
 	except Exception as e:
 		print("Error running MFA:", e, file=sys.stderr)
+		raise
 
 	print(f"[MFA] TextGrids found: {glob.glob(output_dir + '/*.TextGrid')}", file=sys.stderr)
 

@@ -13,11 +13,15 @@ RUN micromamba create -y -n mfa -c conda-forge \
 ENV MAMBA_ROOT_PREFIX=/opt/conda
 ENV MFA_BIN=/opt/conda/envs/mfa/bin/mfa
 ENV PATH=/opt/conda/envs/mfa/bin:$PATH
+ENV MFA_ROOT_DIR=/opt/mfa_root
+RUN mkdir -p /opt/mfa_root && chmod -R 777 /opt/mfa_root
 
 RUN micromamba run -n mfa mfa model download acoustic english_mfa \
  && micromamba run -n mfa mfa model download dictionary english_mfa \
  && micromamba run -n mfa mfa model download acoustic mandarin_mfa \
- && micromamba run -n mfa mfa model download dictionary mandarin_mfa
+ && micromamba run -n mfa mfa model download dictionary mandarin_mfa \
+ && micromamba run -n mfa mfa model inspect acoustic mandarin_mfa \
+ && ls -la /opt/mfa_root
 
 RUN micromamba run -n mfa pip install --no-cache-dir \
         python-magic maxminddb
