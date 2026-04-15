@@ -1069,7 +1069,6 @@ to help us in our research.
             <!-- ====================================================== -->
 
             			
-			<button class="lang-toggle iconic" title="Switch language" data-i18n-attr="title:header.switchLang" onclick="toggleLang()">EN / 中</button>
 			<button class="new-clip attention" title='Add new clip' data-i18n-attr="title:header.newClip"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
   <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
 </svg><span data-i18n="header.clip">Clip</span></button>
@@ -2061,119 +2060,23 @@ to help us in our research.
             		#upload-file:checked   + label + div { display: block;}
             	</style>
 
-            	<h2 data-i18n="newClip.heading">Add a Clip</h2>
+            	<h2 data-i18n="newClip.heading">添加片段</h2>
 
             	<div class="hbox">
-            		<label for="title-input" data-i18n="newClip.title">Title</label>
-            		<input type="text" id="title-input" value="Untitled"/>
+            		<label for="title-input" data-i18n="newClip.title">标题</label>
+            		<input type="text" id="title-input" value="未命名"/>
 
-            		<label for="color-select" data-i18n="newClip.color">Color</label>
+            		<label for="color-select" data-i18n="newClip.color">颜色</label>
             		<input type="color" id="color-select" value="#000000"/>
             	</div>
 
             	<br>
 
-            	<!-- Language + Script selection -->
+            	<!-- Script selection（中文单语：语言固定为 zh） -->
             	<div class="hbox">
-            		<label for="lang-select" data-i18n="newClip.language">Language</label>
-            		<select id="lang-select">
-            			<option value="en">English</option>
-            			<option value="zh">中文</option>
-            		</select>
-            	</div>
-            	<br>
-            	<div class="hbox">
-            		<label for="script-select" data-i18n="newClip.script">Script </label>
+            		<label for="script-select" data-i18n="newClip.script">文稿 </label>
             		<select class="script" id="script-select">
             			
-            	<option data-lang="en" value="When the sunlight strikes raindrops in the air, they act as a prism and form a rainbow. The rainbow is a division of white light into many beautiful colors. These take the shape of a long round arch, with its path high above, and its two ends apparently beyond the horizon. There is , according to legend, a boiling pot of gold at one end. People look, but no one ever finds it."
-            	>Rainbow Passage</option>
-
-            	<option data-lang="en" value="You wish to know all about my grandfather. Well, he is nearly 93 years old, yet he still thinks as swiftly as ever. He dresses himself in an old black frock coat, usually several buttons missing. A long beard clings to his chin, giving those who observe him a pronounced feeling of the utmost respect. When he speaks, his voice is just a bit cracked and quivers a bit. Twice each day he plays skillfully and with zest upon a small organ. Except in the winter when the snow or ice prevents, he slowly takes a short walk in the open air each day. We have often urged him to walk more and smoke less, but he always answers, "Banana oil!" Grandfather likes to be modern in his language.">
-            	Grandfather passage</option>
-
-            	<option data-lang="en" value="Please call Stella. Ask her to bring these things with her from the store: Six spoons of fresh snow peas, five thick slabs of blue cheese, and maybe a snack for her brother Bob. We also need a small plastic snake and a big toy frog for the kids. She can scoop these things into three red bags, and we will go meet her Wednesday at the train station."
-            	>Please call stella</option>
-
-            	<option data-lang="en" value="
-            		That quick beige fox jumps in the air over each thin dog. Look out, I shout, for he's foiled you again, creating chaos."
-            	>Phonetic Pangram: Quick beige fox...</option>
-
-
-            	<option data-lang="en" value="
-            		The beige hue on the waters of the loch impressed all, including the French queen, before she heard that symphony again, just as young Arthur wanted."
-            	>Phonetic Pangram: Waters of the loch</option>
-
-            	<option data-lang="en" value="
-            		I am afraid to own a Body—
-            		I am afraid to own a Soul—
-            		Profound—precarious Property—
-            		Possession, not optional—
-
-            		Double Estate—entailed at pleasure
-            		Upon an unsuspecting Heir—
-            		Duke in a moment of Deathlessness
-            		And God, for a Frontier."
-            	>Emily Dickinson: Afraid to own a body</option>
-
-
-            	<option data-lang="en" value="
-            		Rearrange a ''Wife's'' affection!
-            		When they dislocate my Brain!
-            		Amputate my freckled Bosom!
-            		Make me bearded like a man!
-
-            		Blush, my spirit, in thy Fastness —
-            		Blush, my unacknowledged clay —
-            		Seven years of troth have taught thee
-            		More than Wifehood every may!"
-            	>Emily Dickinson: Rearrange a "Wife's" affection</option>
-
-            	<option data-lang="en" value="
-            		Yet be thou mindful ever, —
-            		Heat from fire, fire from heat —
-            		None can see sever, none can sever "
-            	>Heat from fire</option>
-
-            	<option data-lang="en" value="
-            		The moon is in doubt
-            		over whether to be
-            		a man or a woman.
-
-            		There've been rumors,
-            		all manner of allegations,
-            		bold claims and public lies:
-
-            		He's belligerent. She's in a funk.
-            		When he fades, the world teeters.
-            		When she burgeons, crime blossoms.
-
-            		O how the operatic impulse wavers!
-            		Dip deep, my darling, into the blank pool."
-            	>Rita Dove: Trans-</option>
-
-
-            	<option data-lang="en" value="
-            		Oh, but had the artisan who made me
-            		created me instead — a fair woman.
-            		Today I would be wise and insightful.
-            		We would weave, my friends and I,
-            		and in the moonlight spin our yarn,
-            		and tell our stories to one another,
-            		from dusk till midnight."
-            	>Kalonymus: Even Bochan</option>
-
-            	<option data-lang="en" value="
-            		From childhood's hour I have not been
-            		As others were — I have not seen
-            		As others saw — I could not bring
-            		My passions from a common spring —
-            		From the same source I have not taken
-            		My sorrow — I could not awaken
-            		My heart to joy at the same tone —
-            		And all I lov'd — I lov'd alone."
-            	>Edgar Allan Poe: Alone</option>
-
             	<option data-lang="zh" value="当阳光照射到空气中的雨滴时，它们就像棱镜一样，将白光分解成许多美丽的颜色，形成彩虹。彩虹呈现出长长的圆弧形，路径高悬于天空之上，两端似乎延伸至地平线以外。传说中，彩虹的一端藏着一锅沸腾的黄金。人们不断寻找，却从未有人真正找到它。"
             	>彩虹（标准朗读段）</option>
 
@@ -2192,7 +2095,7 @@ to help us in our research.
             	<option data-lang="zh" value="春眠不觉晓，处处闻啼鸟。夜来风雨声，花落知多少。床前明月光，疑是地上霜。举头望明月，低头思故乡。离离原上草，一岁一枯荣。野火烧不尽，春风吹又生。"
             	>唐诗选段</option>
 
-            	<option value="custom">Custom</option>
+            	<option value="custom">自定义</option>
             		</select>
             	</div>
             	<textarea rows="6" id="transcript"></textarea>
@@ -2205,26 +2108,7 @@ to help us in our research.
             			return value.replace(/\s\s+/g, '\n').trim()
             		}
 
-            		function filterScriptsByLang(lang) {
-            			let select = $('#script-select');
-            			let firstVisible = null;
-            			Array.from(select.options).forEach(opt => {
-            				let optLang = opt.dataset.lang || 'en';
-            				let hide = optLang !== lang && opt.value !== 'custom';
-            				opt.hidden = hide;
-            				if (!hide && !firstVisible) firstVisible = opt;
-            			});
-            			if (firstVisible) {
-            				select.value = firstVisible.value;
-            				globalState.set('transcript', firstVisible.value === 'custom' ? '' : formatTranscript(firstVisible.value));
-            			}
-            		}
-
             		globalState.set('transcript', formatTranscript($('#script-select').value));
-
-            		$('#lang-select').addEventListener('change', evt => {
-            			filterScriptsByLang($('#lang-select').value);
-            		});
 
             		$('#script-select').addEventListener('change', evt => {
             			let value = $('#script-select').value;
@@ -2242,24 +2126,24 @@ to help us in our research.
 
             	<!-- Upload Options -->
             	<input type="radio" name="add-recording" id="upload-file" checked>
-            	<label for="upload-file" data-i18n="newClip.uploadFile">Upload a file</label>
+            	<label for="upload-file" data-i18n="newClip.uploadFile">上传文件</label>
             	<div>
             		<input type='file' id='audio-file-input' name='recording'
             		capture="user" accept="audio/*,video/*,audio/mpeg,audio/mp4,audio/x-aiff,audio/ogg,audio/vorbis,audio/opus,audio/vnd.wav,.wav,.mp3,.ogg,.opus,.m4a,.webm"/>
             	</div>
             	<br>
             	<input type="radio" name="add-recording" id="record-voice">
-            	<label for="record-voice" data-i18n="newClip.recordVoice">Record your voice</label>
+            	<label for="record-voice" data-i18n="newClip.recordVoice">录制声音</label>
             	<div>
-            		<button id="start-recording" data-i18n="newClip.start">⏺︎ Start</button>
-            		<button id="stop-recording" data-i18n="newClip.stop">⏹︎ Stop</button>
-            		<span data-i18n="newClip.recordedPrefix">Recorded</span> <span id="recording-count">0</span> <span data-i18n="newClip.recordedSuffix">seconds</span>
+            		<button id="start-recording" data-i18n="newClip.start">⏺︎ 开始</button>
+            		<button id="stop-recording" data-i18n="newClip.stop">⏹︎ 停止</button>
+            		<span data-i18n="newClip.recordedPrefix">已录制</span> <span id="recording-count">0</span> <span data-i18n="newClip.recordedSuffix">秒</span>
             		<br>
             		<br>
             		<audio controls id="recording-preview"></audio>
             	</div>
             	<!-- Submit -->
-            	<button id="submit" class='attention' onclick="submitAudio()" data-i18n="newClip.submit">Add Clip</button>
+            	<button id="submit" class='attention' onclick="submitAudio()" data-i18n="newClip.submit">添加片段</button>
             	<script>
             	try {
             		// record from their microphone in-browser,
@@ -2338,7 +2222,7 @@ to help us in our research.
             			formData.append('referrer', document.referrer);
             			formData.append('screen-width', window.screen.width);
             			formData.append('screen-height', window.screen.height);
-            			formData.append('lang', $('#lang-select').value);
+            			formData.append('lang', 'zh');
 
             			clip.transcript = transcriptText;
             			clip.title = $('#title-input').value;
