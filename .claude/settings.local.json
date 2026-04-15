@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(powershell:*)",
-      "Read(//tmp/gender-voice-rec/**)"
+      "Read(//tmp/gender-voice-rec/**)",
+      "Bash(python3 -c \" import json a=json.load\\(open\\('/mnt/e/ai/gender-voice-visualization/stats.json'\\)\\) b=json.load\\(open\\('/mnt/e/ai/gender-voice-visualization/stats_zh.json'\\)\\) print\\('EN stdevs sample:'\\) for k in ['IY1','AA1','AE1','AO1','EH1','UW1']: if k in a: print\\(k,'F1 mean/sd',round\\(a[k][1]['mean']\\),round\\(a[k][1]['stdev']\\),'F2',round\\(a[k][2]['mean']\\),round\\(a[k][2]['stdev']\\),'F3',round\\(a[k][3]['mean']\\),round\\(a[k][3]['stdev']\\)\\) print\\('ZH:'\\) for k in ['a','i','u','e','o','y']: print\\(k,'F1',b[k][1]['mean'],b[k][1]['stdev'],'F2',b[k][2]['mean'],b[k][2]['stdev'],'F3',b[k][3]['mean'],b[k][3]['stdev']\\) \" grep -rn \"stats.json\" /mnt/e/ai/gender-voice-visualization --include=\"*.py\" --include=\"*.cgi\" --include=\"*.md\" --include=\"*.sh\")",
+      "Bash(python3:*)"
     ]
   }
 }

@@ -1,6 +1,6 @@
 
 <!-- ======================= Player ======================= -->
-<button class="play-pause iconic" title='play/pause'>
+<button class="play-pause iconic" title='play/pause' data-i18n-attr="title:header.playPause">
 {% include 'play-fill.svg' %}
 {% include 'pause-fill.svg' %}
 </button>
@@ -116,7 +116,7 @@ try {
 	window.requestAnimationFrame(updateTime);
 
 } catch(exception) {
-	alert("An unknown error occured.");
+	alert(t('alert.unknown'));
 	console.error(exception);
 }
 </script>

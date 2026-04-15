@@ -268,10 +268,10 @@ class VoiceGraph {
 				$('.y.hairline').style.transform = `translate(0px, ${hairTranslateY})`;
 			}, 1);
 
-			this.xValueLabel.innerHTML = `${Math.round(resonance * 100)}%`;
+			this.xValueLabel.innerHTML = `${Math.round(resonance * 100)}${t('graph.percentUnit')}`;
 			this.yValueLabel.innerHTML = `${Math.round(
 				this.pitchLowerBoundHz + pitch * this.pitchRange
-			)}Hz`;
+			)}${t('graph.pitchUnit')}`;
 
 			this.yHairline.style.opacity = '1';
 			this.yValueLabel.style.opacity = '1';

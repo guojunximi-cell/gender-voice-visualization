@@ -5,7 +5,7 @@
 		<meta charset='utf-8'/>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="theme-color" content="#45acf4">
-		<title>Acoustic Genderspace Viewer - Research Trial</title>
+		<title data-i18n="app.title">Acoustic Genderspace Viewer - Research Trial</title>
 		<link rel="shortcut icon" href="./resources/logo.png">
 		<link rel="icon" sizes="192x192" href="./resources/logo.png">
 		<link href="data:text/css," rel="stylesheet" type="text/css" title="Null">
@@ -24,6 +24,7 @@
 			{% include 'svg-icons.js' %}
 		</script>
 		{% if dev %}
+			<script src="./ui/i18n.js"></script>
 			<script src="./ui/dom.js"></script>
 			<script src="./ui/globals.js"></script>
 			<script src="./ui/clip.js"></script>
@@ -32,6 +33,7 @@
 		{% else %}
 		<script>
 			{% filter indent(width=8) %}
+				{% include "i18n.js" %}
 				{% include "dom.js" %}
 				{% include "globals.js" %}
 				{% include "clip.js" %}
@@ -47,9 +49,10 @@
 			{% filter indent(width=12) %}
 				{% include 'player.html' %}
 			{% endfilter %}
-			<button class="new-clip attention" title='Add new clip'>{% include 'plus-lg.svg' %}<span>Clip</span></button>
+			<button class="lang-toggle iconic" title="Switch language" data-i18n-attr="title:header.switchLang" onclick="toggleLang()">EN / 中</button>
+			<button class="new-clip attention" title='Add new clip' data-i18n-attr="title:header.newClip">{% include 'plus-lg.svg' %}<span data-i18n="header.clip">Clip</span></button>
 			<div class="spinner hidden"></div>
-			<div class="loading-message">Adding clip...</div>
+			<div class="loading-message" data-i18n="header.adding">Adding clip...</div>
 			<script>
 			$('button.new-clip').addEventListener('click', evt => {
 				$('.modal').appendChild($('section.new-clip'));

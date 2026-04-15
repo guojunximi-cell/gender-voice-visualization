@@ -71,8 +71,8 @@ td.highlight {
 }
 </style>
 <section class="details"> 
-	<h2 class='instructions'>Clip Details</h2>
-	<div class='instructions'>
+	<h2 class='instructions' data-i18n="details.heading">Clip Details</h2>
+	<div class='instructions' data-i18n="details.instructions">
 		When you select a clip/point from the graph it will be displayed here.
 		If you just loaded the page and are seeing this,
 		your browser is downloading the examples
@@ -85,27 +85,27 @@ td.highlight {
 		<div class="hbox">
 			<h2 id="preview-title"></h2>
 			<span class='buttons'>
-				<span id='delete-confirm' class='hidden'>Press again to delete</span>
-				<button class='delete' title='Delete Clip'>{% include 'trash.svg' %}</button>
-				<button class='download' title='Download Clip'>{% include 'download.svg' %}</button>
+				<span id='delete-confirm' class='hidden' data-i18n="details.deleteConfirm">Press again to delete</span>
+				<button class='delete' title='Delete Clip' data-i18n-attr="title:details.deleteTitle">{% include 'trash.svg' %}</button>
+				<button class='download' title='Download Clip' data-i18n-attr="title:details.downloadTitle">{% include 'download.svg' %}</button>
 			</span>
 		</div>
 
 		<table>
 			<tr>
 				<th></th>
-				<th>Mean</th>
-				<th>Median</th>
-				<th>St. dev.</th>
+				<th data-i18n="details.mean">Mean</th>
+				<th data-i18n="details.median">Median</th>
+				<th data-i18n="details.stdev">St. dev.</th>
 			</tr>
 			<tr>
-				<th>Pitch</th>
+				<th data-i18n="details.pitch">Pitch</th>
 				<td id='preview-mean-pitch'>--</td>
 				<td id='preview-median-pitch'>--</td>
 				<td class='highlight'><span id='preview-stdev-pitch'></span>*</td>
 			</tr>
 			<tr>
-				<th>Resonance</th>
+				<th data-i18n="details.resonance">Resonance</th>
 				<td id='preview-mean-resonance'>--</td>
 				<td id='preview-median-resonance'>--</td>
 				<td id='preview-stdev-resonance'>--</td>
@@ -113,17 +113,17 @@ td.highlight {
 		</table>
 		<br>
 		<div>
-			<label for="preview-transcript">Transcript</label>:
+			<label for="preview-transcript" data-i18n="details.transcript">Transcript</label>:
 			<span id='preview-transcript'></span>
 		</div>
 		<details>
-			<summary>Advanced</summary>
+			<summary data-i18n="details.advanced">Advanced</summary>
 
-			<button id='dl-json'>Download JSON</button>
+			<button id='dl-json' data-i18n="details.dlJson">Download JSON</button>
 		</details>
 		<hr>
 		<div>
-			<small>* In many contexts, greater variation in pitch (standard deviation) is 
+			<small data-i18n="details.stdevNote">* In many contexts, greater variation in pitch (standard deviation) is
 			associated with women's speech, whereas monotone is associated with men's speech.
 			</small>
 		</div>
@@ -136,12 +136,12 @@ globalState.render(['previewClip'], current => {
 		$('.details').classList.add('has-selection');
 		$('#preview-title').innerHTML = current.previewClip.title || '';
 		if (current.previewClip.meanPitch) {
-			$('#preview-mean-pitch').innerHTML = Math.round(current.previewClip.meanPitch) + 'Hz';
-			$('#preview-mean-resonance').innerHTML = Math.round(current.previewClip.meanResonance * 100) + '%';
-			$('#preview-stdev-pitch').innerHTML = Math.round(current.previewClip.stdevPitch) + 'Hz';
-			$('#preview-stdev-resonance').innerHTML = Math.round(current.previewClip.stdevResonance * 100) + '%';
-			$('#preview-median-pitch').innerHTML = Math.round(current.previewClip.medianPitch) + 'Hz';
-			$('#preview-median-resonance').innerHTML = Math.round(current.previewClip.medianResonance * 100) + '%';
+			$('#preview-mean-pitch').innerHTML = Math.round(current.previewClip.meanPitch) + t('graph.pitchUnit');
+			$('#preview-mean-resonance').innerHTML = Math.round(current.previewClip.meanResonance * 100) + t('graph.percentUnit');
+			$('#preview-stdev-pitch').innerHTML = Math.round(current.previewClip.stdevPitch) + t('graph.pitchUnit');
+			$('#preview-stdev-resonance').innerHTML = Math.round(current.previewClip.stdevResonance * 100) + t('graph.percentUnit');
+			$('#preview-median-pitch').innerHTML = Math.round(current.previewClip.medianPitch) + t('graph.pitchUnit');
+			$('#preview-median-resonance').innerHTML = Math.round(current.previewClip.medianResonance * 100) + t('graph.percentUnit');
 		}
 		if (current.previewClip.transcript) {
 			$('#preview-transcript').innerHTML = current.previewClip.transcript;

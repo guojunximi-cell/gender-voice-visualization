@@ -44,13 +44,13 @@
 		#upload-file:checked   + label + div { display: block;}
 	</style>
 
-	<h2>Add a Clip</h2>
+	<h2 data-i18n="newClip.heading">Add a Clip</h2>
 
 	<div class="hbox">
-		<label for="title-input">Title</label>
+		<label for="title-input" data-i18n="newClip.title">Title</label>
 		<input type="text" id="title-input" value="Untitled"/>
 
-		<label for="color-select">Color</label>
+		<label for="color-select" data-i18n="newClip.color">Color</label>
 		<input type="color" id="color-select" value="#000000"/>
 	</div>
 
@@ -58,7 +58,7 @@
 
 	<!-- Language + Script selection -->
 	<div class="hbox">
-		<label for="lang-select">Language</label>
+		<label for="lang-select" data-i18n="newClip.language">Language</label>
 		<select id="lang-select">
 			<option value="en">English</option>
 			<option value="zh">中文</option>
@@ -66,7 +66,7 @@
 	</div>
 	<br>
 	<div class="hbox">
-		<label for="script-select">Script </label>
+		<label for="script-select" data-i18n="newClip.script">Script </label>
 		<select class="script" id="script-select">
 			{% include 'speech-scripts.html' %}
 		</select>
@@ -118,24 +118,24 @@
 
 	<!-- Upload Options -->
 	<input type="radio" name="add-recording" id="upload-file" checked>
-	<label for="upload-file">Upload a file</label>
+	<label for="upload-file" data-i18n="newClip.uploadFile">Upload a file</label>
 	<div>
-		<input type='file' id='audio-file-input' name='recording' 
+		<input type='file' id='audio-file-input' name='recording'
 		capture="user" accept="audio/*,video/*,audio/mpeg,audio/mp4,audio/x-aiff,audio/ogg,audio/vorbis,audio/opus,audio/vnd.wav,.wav,.mp3,.ogg,.opus,.m4a,.webm"/>
 	</div>
 	<br>
 	<input type="radio" name="add-recording" id="record-voice">
-	<label for="record-voice">Record your voice</label>
+	<label for="record-voice" data-i18n="newClip.recordVoice">Record your voice</label>
 	<div>
-		<button id="start-recording">⏺︎ Start</button>
-		<button id="stop-recording">⏹︎ Stop</button>
-		Recorded <span id="recording-count">0</span> seconds
+		<button id="start-recording" data-i18n="newClip.start">⏺︎ Start</button>
+		<button id="stop-recording" data-i18n="newClip.stop">⏹︎ Stop</button>
+		<span data-i18n="newClip.recordedPrefix">Recorded</span> <span id="recording-count">0</span> <span data-i18n="newClip.recordedSuffix">seconds</span>
 		<br>
 		<br>
 		<audio controls id="recording-preview"></audio>
 	</div>
 	<!-- Submit -->
-	<button id="submit" class='attention' onclick="submitAudio()">Add Clip</button>
+	<button id="submit" class='attention' onclick="submitAudio()" data-i18n="newClip.submit">Add Clip</button>
 	<script>
 	try {
 		// record from their microphone in-browser,
@@ -167,17 +167,8 @@
 			function alertRecordingFailure(exception) {
 				alert(
 					String(window.location).slice(0, 5) == 'https'
-					?
-						  "Sorry, something went wrong. " 
-						+ "Please ensure that your microphone is connected "
-						+ "and that your browser allows us to record from it. "
-						+ "Alternately, you can try uploading a file recorded from a native app instead."
-					:
-						  "Recording in-browser is only available "
-						+ "when accessing the site over a secure connection. "
-						+ "To record, reload the page ensuring "
-						+ "that the URL starts with 'https', "
-						+ "including the 's' at the end."
+					? t('alert.recordingHttps')
+					: t('alert.recordingHttp')
 				);
 				console.error(exception);
 			}
@@ -239,13 +230,13 @@
 
 			} else if ($('#record-voice').checked) {
 				if (!recordedAudio) {
-					alert('Please stop the recording before submitting.');
+					alert(t('alert.stopRecordingFirst'));
 					return;
 				}
 				formData.append('recording', recordedAudio);
 				clip.loadAudioFile(recordedAudio);
 			} else {
-				alert('Please upload a file or make a recording.');
+				alert(t('alert.uploadOrRecord'));
 				return;
 			}
 
@@ -257,9 +248,16 @@
 			fetch('./backend.cgi', { method: 'POST', body: formData})
 			.then(response => {
 				if (!response.ok) throw new Error(response.status);
-				if (response.headers.get('Content-Length') < 2) return {};
-				return response.json();
+				return response.text().then(txt => {
+					if (!txt) return {};
+					try { return JSON.parse(txt); }
+					catch (e) {
+						console.error('backend returned non-JSON:', txt);
+						throw new Error('Non-JSON response: ' + txt.slice(0, 200));
+					}
+				});
 			}).then(data => {
+				console.log('backend response data:', data);
 				$('button.new-clip').classList.remove('hidden');
 				$('button.new-clip + .spinner').classList.add('hidden');
 
@@ -275,20 +273,15 @@
 				globalState.set('playingClip', clip);
 				globalState.set('previewClip', clip);
 
-			}).catch(() => {
-				alert(
-					"Sorry, we weren't able to process your recording. " +
-					"Make sure to speak clearly and ensure " +
-					"that your transcript matches the audio. " +
-					"For increased chance of success," +
-					"try using short clips with a 1-second period of silence."
-				);
+			}).catch((err) => {
+				console.error('submitAudio failed:', err);
+				alert(t('alert.processFailed'));
 				$('button.new-clip').classList.remove('hidden');
 				$('button.new-clip + .spinner').classList.add('hidden');
 			});
 		}
 	} catch (exception) {
-		alert("An unknown error occured.");
+		alert(t('alert.unknown'));
 		console.error(exception);
 	}
 	</script>

@@ -19,6 +19,23 @@ $('.play-pause').focus();
 
 $('button.details').click();
 
+// i18n: apply translations after all DOM is in place, sync lang-select to UI lang.
+applyI18n();
+(function syncLangSelectInit() {
+	let langSelect = $('#lang-select');
+	if (!langSelect) return;
+	langSelect.value = getLang();
+	langSelect.addEventListener('change', evt => {
+		let v = langSelect.value;
+		if ((v === 'en' || v === 'zh') && v !== getLang()) setLang(v);
+	});
+	if (typeof filterScriptsByLang === 'function') filterScriptsByLang(getLang());
+})();
+window.addEventListener('langchange', () => {
+	let prev = globalState.get('previewClip');
+	if (prev) { globalState.set('previewClip', null); globalState.set('previewClip', prev); }
+});
+
 for (let el of $$('textarea, input')) {
 	el.addEventListener('focusin', resizeEvent);
 	el.addEventListener('focusout', resizeEvent);

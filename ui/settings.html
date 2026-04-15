@@ -29,11 +29,11 @@
 	}
 </style>
 <section class="settings">
-	<h2>Your Data</h2>
+	<h2 data-i18n="settings.yourData">Your Data</h2>
 	<div id="import-export" class="hbox">
-		<button id="export-clips">Export</button>
+		<button id="export-clips" data-i18n="settings.export">Export</button>
 		<input type="file" id="import-clips-file"/>
-		<button id="import-clips">Import</button>
+		<button id="import-clips" data-i18n="settings.import">Import</button>
 	</div>
 	<script>
 		$('#export-clips').addEventListener('click', evt => {
@@ -55,21 +55,21 @@
 				}
 				reader.readAsText($('#import-clips-file').files[0]);
 			} else {
-				alert('You need to select the file containing your exported data.');
+				alert(t('settings.importNoFile'));
 			}
 		});
 	</script>
 	<hr>
 	<div class="hbox examples">
-	<h2>Examples</h2>
-		<button id="load-default-clips" onclick="loadDefaultClips()">Reload Defaults</button>
-		<button id="load-extended-clips" onclick="loadExtendedClips()">Load Extended</button>
+	<h2 data-i18n="settings.examples">Examples</h2>
+		<button id="load-default-clips" onclick="loadDefaultClips()" data-i18n="settings.reloadDefaults">Reload Defaults</button>
+		<button id="load-extended-clips" onclick="loadExtendedClips()" data-i18n="settings.loadExtended">Load Extended</button>
 	</div>
-	<p>Warning: The extended set of examples may use large amounts of data.</p>
+	<p data-i18n="settings.extendedWarn">Warning: The extended set of examples may use large amounts of data.</p>
 
 	<hr>
 
-	<h2>Theme</h2>
+	<h2 data-i18n="settings.theme">Theme</h2>
 	<select id="theme-select">
 		<option value="Deep Dark">Deep Dark</option>
 		<option value="Light Blue">Light Blue</option>
@@ -87,53 +87,53 @@
 	<br>
 
 	<details id="set-colors">
-		<summary>Customize</summary>
-		Rounded Corners:
+		<summary data-i18n="settings.customize">Customize</summary>
+		<span data-i18n="settings.roundedCorners">Rounded Corners:</span>
 		<input type="range" value="15" id="border-radius" />
 		<br>
-		Shadow Strength:
+		<span data-i18n="settings.shadowStrength">Shadow Strength:</span>
 		<input type="range" value="5" id="box-shadow-strength" class="proportion"  />
 		<br>
-		Shadow Spread:
+		<span data-i18n="settings.shadowSpread">Shadow Spread:</span>
 		<input type="range" value="15" id="box-shadow-spread" />
 		<br>
-		Highlight Strength:
+		<span data-i18n="settings.highlightStrength">Highlight Strength:</span>
 		<input type="range" value="0" id="highlight-strength" class="proportion" />
 		<br>
 		<br>
 
 		<input type="color" id="body-background" >
-		<label for="body-background">background color</label>
-		<br>	
+		<label for="body-background" data-i18n="settings.bg">background color</label>
+		<br>
 		<input type="color" id="body-color" >
-		<label for="body-color">text color</label>
-		<br>	
+		<label for="body-color" data-i18n="settings.text">text color</label>
+		<br>
 		<input type="color" id="chrome-color" >
-		<label for="chrome-color">chrome color</label>
+		<label for="chrome-color" data-i18n="settings.chromeColor">chrome color</label>
 		<br>
 		<input type="color" id="chrome-background"  >
-		<label for="chrome-background">chrome background</label>
+		<label for="chrome-background" data-i18n="settings.chromeBg">chrome background</label>
 		<br>
 		<input type="color" id="chrome-border" >
-		<label for="chrome-border">chrome border</label>
+		<label for="chrome-border" data-i18n="settings.chromeBorder">chrome border</label>
 		<br>
 		<input type="color" id="accent" >
-		<label for="accent">accent</label>
+		<label for="accent" data-i18n="settings.accent">accent</label>
 		<br>
 		<input type="color" id="accent-text" >
-		<label for="accent">accent text</label>
+		<label for="accent" data-i18n="settings.accentText">accent text</label>
 		<br>
 		<input type="color" id="button-color" >
-		<label for="button-color">button color</label>
+		<label for="button-color" data-i18n="settings.btnColor">button color</label>
 		<br>
 		<input type="color" id="button-background" >
-		<label for="button-background">button background</label>
+		<label for="button-background" data-i18n="settings.btnBg">button background</label>
 		<br>
 		<input type="color" id="input-color" >
-		<label for="input-color">input color</label>
+		<label for="input-color" data-i18n="settings.inputColor">input color</label>
 		<br>
 		<input type="color" id="input-background" >
-		<label for="input-background">input background</label>
+		<label for="input-background" data-i18n="settings.inputBg">input background</label>
 		<br>
 
 	</details>

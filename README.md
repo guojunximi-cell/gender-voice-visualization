@@ -2,6 +2,8 @@
 
 Fork 自 upstream 英文版，在 `working-chinese-version` 分支上增加了普通话支持。本文档汇总所有相对上游 `master` 的实质改动（不含纯 CRLF/LF 换行噪声）。
 
+> **训练状态**：中文语料（AISHELL-3，实际入池 134 男 + 134 女）已在本管线下跑完 MFA 对齐 + Praat 共振峰聚合，产出 `stats_zh.json`（z-score 参考）与 `weights_zh.json = [0.658, 0.242, 0.1]`（10-fold CV 暴力搜索）。held-out 验证 acc=0.900，Δmedian=0.196。详见 §7。
+
 ---
 
 ## 1. 新增文件
@@ -195,3 +197,36 @@ PYTHONPATH=acousticgender .venv/bin/python acousticgender/corpusanalysis.py \
 - [x] M4 生成新 `stats_zh.json`（114+114 实际入池；M6 重跑后 134+134）
 - [x] M5 验证 PASS（EN weights: acc=0.85, Δmedian=0.206）
 - [x] M6 `weights_zh.json` 向量化 k-fold 暴力搜索（acc=0.900, Δmedian=0.196）+ tag v0.1.1
+
+---
+
+## 8. v0.1.2 — 内容清理 + Railway 部署
+
+### 8.1 中文练声文本替换 + 移除捐助 FAQ（`db6f604`）
+
+- `index.html` / `resources/speech-scripts.html`：删除「我爱祖国」，替换为三条公共领域练声素材：
+  - 绕口令·平翘舌（s/sh 辨音）
+  - 绕口令·八百标兵（b/p 送气）
+  - 普通话测试标准短文《朋友》节选
+- `index.html` / `ui/help.html` / `ui/i18n.js`：移除 help FAQ7 捐助条目及对应中英 i18n 键。中文分支不再转发上游作者 Luna McNulty 的赞助入口。
+
+### 8.2 Railway 部署支持（`9483180`）
+
+- 新增 `Dockerfile`：基于 `mambaorg/micromamba`，预装 ffmpeg/sox/praat + MFA conda env，启动时通过 `settings.json` 路径直连 mfa env 的 `mfa` 二进制。
+- 新增 `railway.json`、`.dockerignore`。
+- `serve.py`：支持 `PORT` / `HOST` 环境变量，便于容器化部署。
+- `CHANGELOG_ZH.md` 追加 v0.1.2 条目。
+
+### 8.3 Railway 调试：固定 `MFA_ROOT_DIR` + 让 MFA 错误冒泡（`27a6123`）
+
+- `Dockerfile`：显式设置 `MFA_ROOT_DIR`，避免容器内默认路径（`~/Documents/MFA`）不可写。
+- `acousticgender/library/preprocessing.py`：MFA 调用失败时不再静默吞错，直接冒泡 stderr 供 Railway 日志排查。
+
+### 8.4 Railway: 补中文分词依赖（`fce501d`）
+
+- `Dockerfile`：在 MFA env 内追加 `spacy-pkuseg` / `dragonmapper` / `hanziconv` —— MFA v2 `mandarin_mfa` 在容器环境下按字对齐前会触发这些 optional tokenizer，缺失时报 import 错误。
+
+### 状态
+
+- [x] v0.1.2 内容清理 + Railway 镜像可构建
+- [ ] Railway 生产环境端到端验证（录音 → MFA → resonance）
