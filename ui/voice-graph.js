@@ -10,7 +10,7 @@ class VoiceGraph {
 		element.style.boxSizing = 'border-box'
 		let size = element.clientWidth;
 
-		this.pitchUpperBoundHz = 300;
+		this.pitchUpperBoundHz = 500;
 		this.pitchLowerBoundHz = 50;
 		this.pitchRange = this.pitchUpperBoundHz - this.pitchLowerBoundHz;
 
@@ -165,9 +165,15 @@ class VoiceGraph {
 				playingClip.marker.setAttribute('data-pitch', pitchPercent(playingClip.medianPitch) || .5);
 				playingClip.marker.setAttribute('data-resonance', playingClip.medianResonance || .5);
 			} else {
-				let isVowel = currentPhone.phoneme && Array.from(currentPhone.phoneme).filter(
-					value => ["A", "E", "I", "O", "U", "Y"].includes(value)
-				).length > 0;
+				let phonemeStripped = currentPhone.phoneme
+					? currentPhone.phoneme.replace(/[\u02E5-\u02E9]+/g, '')
+					: '';
+				const ZH_VOWELS = new Set(['a','aj','aw','e','ej','i','io','o','ow','u','y','ə','ɥ','ʐ̩','z̩']);
+				let isVowel = currentPhone.phoneme && (
+					Array.from(currentPhone.phoneme).some(
+						value => ["A", "E", "I", "O", "U", "Y"].includes(value)
+					) || ZH_VOWELS.has(phonemeStripped)
+				);
 
 				if (isVowel && currentPhone.hasOwnProperty('F_stdevs') && 
 					currentPhone.F_stdevs[0] &&  currentPhone.F_stdevs[1] && 

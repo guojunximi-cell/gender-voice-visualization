@@ -1,6 +1,11 @@
 *.swp
 __pycache__
 corpus-processed
+corpus-processed-zh/
+corpus/
+corpus-src/
+Miniconda3-latest-Linux-x86_64.sh
 settings.json
 countries.mmdb
 .directory
+.venv/

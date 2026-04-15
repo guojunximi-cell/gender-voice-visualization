@@ -1,5 +1,9 @@
 {
 	"dev"        : true,
-	"logs"       : "/var/log/test.acousticgender.space/",
-	"recordings" : "/rec/"
+	"logs"       : "",
+	"recordings" : "/tmp/gender-voice-rec/",
+	"ffmpeg"     : "/usr/bin/ffmpeg",
+	"sox"        : "/usr/bin/sox",
+	"mfa"        : "/home/yaya/miniconda3/envs/mfa/bin/mfa",
+	"praat"      : "/usr/bin/praat"
 }

@@ -1,14 +1,11 @@
-
-print('preprocessing.py: dir() -> ', dir())
-print('preprocessing.py: __name__ -> ', __name__)
-import subprocess, os, glob, shutil
+import subprocess, os, glob, shutil, sys
 import magic
 
 from . import settings as settings_module
 
 settings = settings_module.settings
 
-def process(uploaded_file, transcript, tmp_dir):
+def process(uploaded_file, transcript, tmp_dir, lang='en'):
 	################## Noise Removal ##################
 
 	os.mkdir(tmp_dir)
@@ -26,41 +23,40 @@ def process(uploaded_file, transcript, tmp_dir):
 	assert(os.path.exists(input_file))
 
 	try:
-		subprocess.check_output(['ffmpeg', '-i', input_file, format_file])
+		subprocess.check_output([settings['ffmpeg'], '-i', input_file, format_file])
 
 		ffmpeg_silence = subprocess.check_output([
-				'ffmpeg', '-i', input_file, 
-				'-af', 'silencedetect=n=-30dB:d=0.5', 
+				settings['ffmpeg'], '-i', input_file,
+				'-af', 'silencedetect=n=-30dB:d=0.5',
 				'-f', 'null', '-'
 		], stderr=subprocess.STDOUT).decode('utf-8').split('\n')
 
 		silence_ranges = list(zip(
-				[line.split(" ")[4] for line in ffmpeg_silence 
+				[line.split(" ")[4] for line in ffmpeg_silence
 						if 'silence_start' in line],
 				[line.split(" ")[4] for line in ffmpeg_silence
 						if 'silence_end' in line]
 		))
 
-		subprocess.check_output(['ffmpeg', '-i', input_file, 
+		subprocess.check_output([settings['ffmpeg'], '-i', input_file,
 				'-af', "aselect='" + '+'.join(
 						['between(t,' + r[0] + ',' + r[1]+')' for r in silence_ranges]
-				) + "', asetpts=N/SR/TB", 
+				) + "', asetpts=N/SR/TB",
 				silence_file
 		])
 
 		assert(os.path.exists(silence_file))
 
 		subprocess.check_output([
-				'sox', silence_file, '-n', 'noiseprof', noise_profile
+				settings['sox'], silence_file, '-n', 'noiseprof', noise_profile
 		])
-		subprocess.check_output(['chmod', '777', noise_profile])
 		subprocess.check_output([
-				'sox', format_file, clean_file, 
+				settings['sox'], format_file, clean_file,
 				'noisered', noise_profile, '0.2'
 		])
 
 		assert(os.path.exists(clean_file))
-	except e:
+	except Exception:
 		clean_file = input_file
 
 	################## Forced Alignment ##################
@@ -70,7 +66,7 @@ def process(uploaded_file, transcript, tmp_dir):
 	os.mkdir(output_dir)
 
 	subprocess.check_output([
-		'ffmpeg' , 
+		settings['ffmpeg'],
 		'-i'     , clean_file,
 		'-acodec', 'pcm_s16le',
 		'-ac'    , '1',
@@ -78,49 +74,89 @@ def process(uploaded_file, transcript, tmp_dir):
 		corpus_dir + '/recording.wav'
 	])
 
-	subprocess.run(['chmod', '777', '-R', tmp_dir])
+	if lang == 'zh':
+		import re as _re
+		han_chars = _re.findall(r'[\u4e00-\u9fff]', transcript)
+		transcript_out = ' '.join(han_chars)
+	else:
+		transcript_out = transcript
 
-	with open(corpus_dir + '/recording.txt', 'w') as f:
-		f.write(transcript)
+	with open(corpus_dir + '/recording.txt', 'w', encoding='utf-8') as f:
+		f.write(transcript_out)
 
-	with open(tmp_dir + '/align.sh', 'w') as f:
-		f.write("""#!/usr/bin/env bash
-		source /opt/conda/etc/profile.d/conda.sh
-		conda activate aligner
-		mfa align ./corpus/ english english ./output/ --clean
-		""")
+	mfa_model = 'mandarin_mfa' if lang == 'zh' else 'english_mfa'
 
-	assert(os.path.exists(tmp_dir + '/align.sh'))
+	scripts_dir = os.path.dirname(settings['mfa'])
+	env_dir     = os.path.dirname(scripts_dir)
+	mfa_env     = os.environ.copy()
 
-	subprocess.check_output(['chmod', '777', tmp_dir + '/align.sh'])
+	if sys.platform == 'win32':
+		# Windows conda layout: env/Scripts/mfa.exe + env/python.exe
+		mfa_python = os.path.join(env_dir, 'python.exe')
+		mfa_script = os.path.join(scripts_dir, 'mfa-script.py')
+		mfa_cmd    = [mfa_python, mfa_script]
+		path_additions = os.pathsep.join([
+			os.path.join(env_dir, 'Library', 'bin'),
+			os.path.join(env_dir, 'Library', 'mingw-w64', 'bin'),
+			os.path.join(env_dir, 'Library', 'usr', 'bin'),
+			os.path.join(env_dir, 'Scripts'),
+			env_dir,
+		])
+		mfa_env['PATH'] = path_additions + os.pathsep + mfa_env.get('PATH', '')
+	else:
+		# Linux/macOS conda layout: env/bin/mfa (shell shim) + env/bin/python
+		mfa_cmd = [settings['mfa']]
+		mfa_env['PATH'] = scripts_dir + os.pathsep + mfa_env.get('PATH', '')
+
+	mfa_env['CONDA_PREFIX'] = env_dir
+
 	cwd = os.getcwd()
 	os.chdir(tmp_dir)
 
+	print(f"[MFA] cmd: {mfa_cmd}", file=sys.stderr)
+	print(f"[MFA] env_dir: {env_dir} (exists: {os.path.isdir(env_dir)})", file=sys.stderr)
 	try:
-		# shell out so we can `source`
-		subprocess.check_output(['./align.sh'], stderr=subprocess.STDOUT) 
+		mfa_out = subprocess.check_output(
+			mfa_cmd + ['align',
+			 './corpus/', mfa_model, mfa_model, './output/', '--clean',
+			 '--beam', '100', '--retry_beam', '400'],
+			stderr=subprocess.STDOUT,
+			env=mfa_env
+		)
+		print("[MFA] stdout+stderr:", mfa_out.decode('utf-8', errors='replace'), file=sys.stderr)
 	except subprocess.CalledProcessError as e:
-		print("CalledProcessError")
-		print(e)
-		print(str(e.output, 'utf-8'))
+		print("CalledProcessError", file=sys.stderr)
+		print(e, file=sys.stderr)
+		print(str(e.output, 'utf-8', errors='replace'), file=sys.stderr)
 	except Exception as e:
-		print("Error")
-		print(e)
-	
+		print("Error running MFA:", e, file=sys.stderr)
+
+	print(f"[MFA] TextGrids found: {glob.glob(output_dir + '/*.TextGrid')}", file=sys.stderr)
+
 	os.chdir(cwd)
 
 
 	################## Phonetic Processing ##################
+	praat_output = None
 	for recording, grid in zip(
-		glob.glob(corpus_dir + '/*.wav'), 
-		glob.glob(output_dir + '/*.TextGrid')
+		sorted(glob.glob(corpus_dir + '/*.wav')),
+		sorted(glob.glob(output_dir + '/*.TextGrid'))
 	):
-		praat_output = subprocess.check_output([
-			'./textgrid-formants.praat', recording, grid
-		]).decode('utf-8')
+		print(f"[Praat] running: {settings['praat']} --run textgrid-formants.praat {recording} {grid}", file=sys.stderr)
+		try:
+			praat_output = subprocess.check_output([
+				settings['praat'], '--run',
+				os.path.join(cwd, 'textgrid-formants.praat'),
+				recording, grid
+			], stderr=subprocess.STDOUT).decode('utf-8')
+			print(f"[Praat] output ({len(praat_output)} chars): {praat_output[:500]}", file=sys.stderr)
+		except subprocess.CalledProcessError as e:
+			print(f"[Praat] CalledProcessError (exit {e.returncode}):", file=sys.stderr)
+			print(e.output.decode('utf-8', errors='replace'), file=sys.stderr)
+			raise
 
 		with open(grid.replace('.TextGrid', '.tsv'), 'w') as f:
 			f.write(praat_output)
 
-		shutil.rmtree(tmp_dir)
-		return praat_output
+	shutil.rmtree(tmp_dir)
+	return praat_output

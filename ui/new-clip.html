@@ -56,7 +56,15 @@
 
 	<br>
 
-	<!-- Script selection -->
+	<!-- Language + Script selection -->
+	<div class="hbox">
+		<label for="lang-select">Language</label>
+		<select id="lang-select">
+			<option value="en">English</option>
+			<option value="zh">中文</option>
+		</select>
+	</div>
+	<br>
 	<div class="hbox">
 		<label for="script-select">Script </label>
 		<select class="script" id="script-select">
@@ -72,7 +80,27 @@
 		function formatTranscript(value) {
 			return value.replace(/\s\s+/g, '\n').trim()
 		}
+
+		function filterScriptsByLang(lang) {
+			let select = $('#script-select');
+			let firstVisible = null;
+			Array.from(select.options).forEach(opt => {
+				let optLang = opt.dataset.lang || 'en';
+				let hide = optLang !== lang && opt.value !== 'custom';
+				opt.hidden = hide;
+				if (!hide && !firstVisible) firstVisible = opt;
+			});
+			if (firstVisible) {
+				select.value = firstVisible.value;
+				globalState.set('transcript', firstVisible.value === 'custom' ? '' : formatTranscript(firstVisible.value));
+			}
+		}
+
 		globalState.set('transcript', formatTranscript($('#script-select').value));
+
+		$('#lang-select').addEventListener('change', evt => {
+			filterScriptsByLang($('#lang-select').value);
+		});
 
 		$('#script-select').addEventListener('change', evt => {
 			let value = $('#script-select').value;
@@ -195,14 +223,14 @@
 			formData.append('referrer', document.referrer);
 			formData.append('screen-width', window.screen.width);
 			formData.append('screen-height', window.screen.height);
-			formData.append('lang', navigator.language || navigator.userLanguage);
+			formData.append('lang', $('#lang-select').value);
 
 			clip.transcript = transcriptText;
 			clip.title = $('#title-input').value;
 			clip.color = $('#color-select').value;
 
 			if ($('#upload-file').checked) {
-				fileInput = $('#audio-file-input')
+				let fileInput = $('#audio-file-input')
 				if (fileInput.files.length < 1) return
 
 				let recording = fileInput.files[0];
@@ -210,6 +238,10 @@
 				clip.loadAudioFile(recording);
 
 			} else if ($('#record-voice').checked) {
+				if (!recordedAudio) {
+					alert('Please stop the recording before submitting.');
+					return;
+				}
 				formData.append('recording', recordedAudio);
 				clip.loadAudioFile(recordedAudio);
 			} else {
@@ -231,7 +263,11 @@
 				$('button.new-clip').classList.remove('hidden');
 				$('button.new-clip + .spinner').classList.add('hidden');
 
-				console.assert(data.hasOwnProperty('phones') && data.phones.length < 1);
+				if (data.error) {
+					console.error('backend error:', data.error, '\n', data.trace);
+					throw new Error(data.error);
+				}
+				console.assert(data.hasOwnProperty('phones') && data.phones.length > 0);
 				
 				clip.loadResponse(data);
 				globalState.mutate('clips', clips => clips.push(clip));
