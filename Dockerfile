@@ -24,7 +24,8 @@ RUN micromamba run -n mfa mfa model download acoustic english_mfa \
  && ls -la /opt/mfa_root
 
 RUN micromamba run -n mfa pip install --no-cache-dir \
-        python-magic maxminddb
+        python-magic maxminddb \
+        spacy-pkuseg dragonmapper hanziconv
 
 WORKDIR /app
 COPY . /app
