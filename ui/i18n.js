@@ -1,4 +1,5 @@
 // Lightweight i18n: dictionary + apply via data-i18n attributes.
+// 前端只走中文；后端仍保留双语逻辑供参考。
 const I18N = {
 	en: {
 		'app.title': 'Acoustic Genderspace Viewer - Research Trial',
@@ -203,25 +204,14 @@ const I18N = {
 };
 
 function getLang() {
-	try {
-		let stored = localStorage.getItem('uiLang');
-		if (stored === 'en' || stored === 'zh') return stored;
-	} catch (e) {}
-	let nav = (navigator.language || 'en').toLowerCase();
-	return nav.startsWith('zh') ? 'zh' : 'en';
+	return 'zh';
 }
 
 function t(key, params) {
-	let lang = getLang();
-	let dict = I18N[lang] || I18N.en;
-	let str = dict[key];
+	let str = I18N.zh[key];
 	if (str === undefined) {
-		if (lang !== 'en' && I18N.en[key] !== undefined) {
-			str = I18N.en[key];
-		} else {
-			console.warn('[i18n] missing key:', key);
-			return key;
-		}
+		console.warn('[i18n] missing key:', key);
+		return key;
 	}
 	if (params) {
 		for (let k in params) str = str.split('{' + k + '}').join(params[k]);
@@ -232,7 +222,7 @@ function t(key, params) {
 function applyI18n(root) {
 	root = root || document;
 	let html = root.documentElement || document.documentElement;
-	if (html) html.setAttribute('lang', getLang() === 'zh' ? 'zh-CN' : 'en');
+	if (html) html.setAttribute('lang', 'zh-CN');
 	let nodes = root.querySelectorAll ? root.querySelectorAll('[data-i18n]') : [];
 	nodes.forEach(el => {
 		let key = el.getAttribute('data-i18n');
@@ -253,18 +243,5 @@ function applyI18n(root) {
 	if (titleEl) document.title = titleEl.textContent;
 }
 
-function setLang(lang) {
-	if (lang !== 'en' && lang !== 'zh') return;
-	try { localStorage.setItem('uiLang', lang); } catch (e) {}
-	applyI18n();
-	let langSelect = document.querySelector('#lang-select');
-	if (langSelect && langSelect.value !== lang) {
-		langSelect.value = lang;
-		langSelect.dispatchEvent(new Event('change'));
-	}
-	window.dispatchEvent(new CustomEvent('langchange', { detail: { lang } }));
-}
-
-function toggleLang() {
-	setLang(getLang() === 'zh' ? 'en' : 'zh');
-}
+function setLang(_lang) { /* 中文单语：保留占位以防外部调用 */ }
+function toggleLang() { /* 中文单语：语言切换已移除 */ }
