@@ -24,7 +24,7 @@ the same rights to the users of any resulting works.
 		<meta charset='utf-8'/>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="theme-color" content="#45acf4">
-		<title>Acoustic Genderspace Viewer - Research Trial</title>
+		<title data-i18n="app.title">Acoustic Genderspace Viewer - Research Trial</title>
 		<link rel="shortcut icon" href="./resources/logo.png">
 		<link rel="icon" sizes="192x192" href="./resources/logo.png">
 		<link href="data:text/css," rel="stylesheet" type="text/css" title="Null">
@@ -827,6 +827,7 @@ let brightIcon = String(`
 `)
 		</script>
 		
+			<script src="./ui/i18n.js"></script>
 			<script src="./ui/dom.js"></script>
 			<script src="./ui/globals.js"></script>
 			<script src="./ui/clip.js"></script>
@@ -881,7 +882,7 @@ to help us in our research.
 			
             				
             <!-- ======================= Player ======================= -->
-            <button class="play-pause iconic" title='play/pause'>
+            <button class="play-pause iconic" title='play/pause' data-i18n-attr="title:header.playPause">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
               <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
             </svg>
@@ -1001,7 +1002,7 @@ to help us in our research.
             	window.requestAnimationFrame(updateTime);
 
             } catch(exception) {
-            	alert("An unknown error occured.");
+            	alert(t('alert.unknown'));
             	console.error(exception);
             }
             </script>
@@ -1068,11 +1069,12 @@ to help us in our research.
             <!-- ====================================================== -->
 
             			
-			<button class="new-clip attention" title='Add new clip'><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+			<button class="lang-toggle iconic" title="Switch language" data-i18n-attr="title:header.switchLang" onclick="toggleLang()">EN / 中</button>
+			<button class="new-clip attention" title='Add new clip' data-i18n-attr="title:header.newClip"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
   <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
-</svg><span>Clip</span></button>
+</svg><span data-i18n="header.clip">Clip</span></button>
 			<div class="spinner hidden"></div>
-			<div class="loading-message">Adding clip...</div>
+			<div class="loading-message" data-i18n="header.adding">Adding clip...</div>
 			<script>
 			$('button.new-clip').addEventListener('click', evt => {
 				$('.modal').appendChild($('section.new-clip'));
@@ -1092,12 +1094,12 @@ to help us in our research.
                 	<button class="details hbox iconic"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
                   <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                   <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
-                </svg> <span>Details</span></button>
+                </svg> <span data-i18n="tab.details">Details</span></button>
                 	<button class="help iconic hbox"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
                   <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                   <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
-                </svg> <span>Help</span></button>
-                	<button class="settings iconic">⚙ Settings</button>
+                </svg> <span data-i18n="tab.help">Help</span></button>
+                	<button class="settings iconic">⚙ <span data-i18n="tab.settings">Settings</span></button>
                 </div>
                 <style>
                 	button.hbox {
@@ -1314,11 +1316,11 @@ to help us in our research.
             	}
             </style>
             <section class="settings">
-            	<h2>Your Data</h2>
+            	<h2 data-i18n="settings.yourData">Your Data</h2>
             	<div id="import-export" class="hbox">
-            		<button id="export-clips">Export</button>
+            		<button id="export-clips" data-i18n="settings.export">Export</button>
             		<input type="file" id="import-clips-file"/>
-            		<button id="import-clips">Import</button>
+            		<button id="import-clips" data-i18n="settings.import">Import</button>
             	</div>
             	<script>
             		$('#export-clips').addEventListener('click', evt => {
@@ -1340,21 +1342,21 @@ to help us in our research.
             				}
             				reader.readAsText($('#import-clips-file').files[0]);
             			} else {
-            				alert('You need to select the file containing your exported data.');
+            				alert(t('settings.importNoFile'));
             			}
             		});
             	</script>
             	<hr>
             	<div class="hbox examples">
-            	<h2>Examples</h2>
-            		<button id="load-default-clips" onclick="loadDefaultClips()">Reload Defaults</button>
-            		<button id="load-extended-clips" onclick="loadExtendedClips()">Load Extended</button>
+            	<h2 data-i18n="settings.examples">Examples</h2>
+            		<button id="load-default-clips" onclick="loadDefaultClips()" data-i18n="settings.reloadDefaults">Reload Defaults</button>
+            		<button id="load-extended-clips" onclick="loadExtendedClips()" data-i18n="settings.loadExtended">Load Extended</button>
             	</div>
-            	<p>Warning: The extended set of examples may use large amounts of data.</p>
+            	<p data-i18n="settings.extendedWarn">Warning: The extended set of examples may use large amounts of data.</p>
 
             	<hr>
 
-            	<h2>Theme</h2>
+            	<h2 data-i18n="settings.theme">Theme</h2>
             	<select id="theme-select">
             		<option value="Deep Dark">Deep Dark</option>
             		<option value="Light Blue">Light Blue</option>
@@ -1367,58 +1369,58 @@ to help us in our research.
             		<option value="00s">00's</option>
             		<option value="10s">10's</option>
             		<option value="custom">Custom</option>
-            	</select>
+            	<select>
             	<br>
             	<br>
 
             	<details id="set-colors">
-            		<summary>Customize</summary>
-            		Rounded Corners:
+            		<summary data-i18n="settings.customize">Customize</summary>
+            		<span data-i18n="settings.roundedCorners">Rounded Corners:</span>
             		<input type="range" value="15" id="border-radius" />
             		<br>
-            		Shadow Strength:
+            		<span data-i18n="settings.shadowStrength">Shadow Strength:</span>
             		<input type="range" value="5" id="box-shadow-strength" class="proportion"  />
             		<br>
-            		Shadow Spread:
+            		<span data-i18n="settings.shadowSpread">Shadow Spread:</span>
             		<input type="range" value="15" id="box-shadow-spread" />
             		<br>
-            		Highlight Strength:
+            		<span data-i18n="settings.highlightStrength">Highlight Strength:</span>
             		<input type="range" value="0" id="highlight-strength" class="proportion" />
             		<br>
             		<br>
 
             		<input type="color" id="body-background" >
-            		<label for="body-background">background color</label>
-            		<br>	
+            		<label for="body-background" data-i18n="settings.bg">background color</label>
+            		<br>
             		<input type="color" id="body-color" >
-            		<label for="body-color">text color</label>
-            		<br>	
+            		<label for="body-color" data-i18n="settings.text">text color</label>
+            		<br>
             		<input type="color" id="chrome-color" >
-            		<label for="chrome-color">chrome color</label>
+            		<label for="chrome-color" data-i18n="settings.chromeColor">chrome color</label>
             		<br>
             		<input type="color" id="chrome-background"  >
-            		<label for="chrome-background">chrome background</label>
+            		<label for="chrome-background" data-i18n="settings.chromeBg">chrome background</label>
             		<br>
             		<input type="color" id="chrome-border" >
-            		<label for="chrome-border">chrome border</label>
+            		<label for="chrome-border" data-i18n="settings.chromeBorder">chrome border</label>
             		<br>
             		<input type="color" id="accent" >
-            		<label for="accent">accent</label>
+            		<label for="accent" data-i18n="settings.accent">accent</label>
             		<br>
             		<input type="color" id="accent-text" >
-            		<label for="accent-text">accent text</label>
+            		<label for="accent" data-i18n="settings.accentText">accent text</label>
             		<br>
             		<input type="color" id="button-color" >
-            		<label for="button-color">button color</label>
+            		<label for="button-color" data-i18n="settings.btnColor">button color</label>
             		<br>
             		<input type="color" id="button-background" >
-            		<label for="button-background">button background</label>
+            		<label for="button-background" data-i18n="settings.btnBg">button background</label>
             		<br>
             		<input type="color" id="input-color" >
-            		<label for="input-color">input color</label>
+            		<label for="input-color" data-i18n="settings.inputColor">input color</label>
             		<br>
             		<input type="color" id="input-background" >
-            		<label for="input-background">input background</label>
+            		<label for="input-background" data-i18n="settings.inputBg">input background</label>
             		<br>
 
             	</details>
@@ -1772,130 +1774,51 @@ to help us in our research.
             	}
             </style>
             <section class="help">
-            	<!--p class='notice'>Help us out! Answer 
-            	<a href="https://brown.co1.qualtrics.com/jfe/form/SV_4PgW7EKNvnxnWLk">our survey</a>.
-            	</p-->
-            	<h2>Tutorial</h2>
+            	<h2 data-i18n="help.tutorial">Tutorial</h2>
 
-            	<div class='mobile-help'>
+            	<div class='mobile-help' data-i18n="help.mobileTip">
             	Mobile users: You can tap the top edge of this pane
             	to expand/collapse it for easier reading.
             	</div>
 
-            	<p>
-            	<img src="resources/logo.png" alt="An acoustic guitar where the headstick is semi-triangular forming a Mars-sign along with the neck and sound hold. Likewise, the sound hole, strings, and bridge form a Venus sign. The image is in the pink, blue, and white transgender pride colors." style="float: right" width='128'/>
-            	This app visualizes the pitch and resonance of voices in recordings over time.
-            	<strong>Pitch</strong> is our perception of the frequency at which the vocal folds vibrate.
-            	<strong>Resonance</strong> is the effect exerted on a sound by the passage the air travels through.
-            	The program plots recordings in a <strong>2-dimensional space</strong>,
-            	where the Y-axis represents pitch,
-            	and the X-axis represents resonance,
-            	with brighter sounds represented with a higher percentage.
-            	</p>
-            	
+            	<p><img src="resources/logo.png" alt="" style="float: right" width='128'/><span data-i18n="help.intro">This app visualizes the pitch and resonance of voices in recordings over time.</span></p>
 
-            	<p>Typically, voices perceived as female have brighter resonance and higher pitch (top right),
-            	while those perceived as male have darker resonance and lower pitch (bottom left).
-            	These features can be blended in different degrees
-            	to create a <strong>broad spectrum</strong> of perceptual and aesthetic qualities related to gender.
-            	There are no sharp cutoffs at which a voice is 
-            	guaranteed to be gendered a specific way,
-            	just as the colors in the graph blend seamlessly into one another.
+            	<p data-i18n="help.spectrum">Typically, voices perceived as female have brighter resonance and higher pitch.</p>
 
-            	<p>Press the <strong>play button</strong> in the top-left corner of the app to play the clip
-            	associated with the selected point on the graph.
-            	Examine some of the provided examples to get a sense
-            	of how positions on the graph correspond to your perceptions of gender.
-            	(Note: Example clips may take some time to show up on slow connections).
-            	You can visualize your own recordings by pressing the <strong>add clip button</strong>
-            	in the top-right and submitting a recording.
-            	It will take some time to process,
-            	so you may wish to examine the other clips while the recording is processed.
+            	<p data-i18n="help.usage">Press the play button to play the clip associated with the selected point on the graph.</p>
 
-            	<p>Your clips are sent to our server for processing,
-            	but they are <strong>not stored persistently</strong>.
-            	You can save the sound file from your recording
-            	using the <strong>download button</strong> in the "Details" tab.
-            	From the settings tab,
-            	you can also <strong>export</strong> all of your data in a single file
-            	which can be imported for viewing at another time.
-            	Otherwise, your data will be lost when you exit the page.
+            	<p data-i18n="help.privacy">Your clips are sent to our server for processing, but they are not stored persistently.</p>
 
-            	<p>We hope that using this program will help you understand how voices are gendered
-            	and assess your own progress if you are trying to alter your voice
-            	to better match your gender identity or desired presentation. Good luck!
+            	<p data-i18n="help.closing">Good luck!</p>
 
-            	<h2>FAQ</h2>
+            	<h2 data-i18n="help.faq">FAQ</h2>
             	<details>
-            		<summary>Why does the marker move around so much even when I'm not changing my voice drastically?</summary>
-            		<p>Most speech has a broad range of values in pitch and resonance,
-            		e.g. The highest and brightest phone spoken in a sample of typical male speech
-            		may well be similar in pitch in resonance to the <em>average</em> phone in typical female speech.
-            		Our perception of a voice is based on the overall tendencies within speech
-            		rather than the moment-to-moment features of individual phones.</p>
+            		<summary data-i18n="help.faq1.q">Why does the marker move around so much?</summary>
+            		<p data-i18n="help.faq1.a">Most speech has a broad range of values in pitch and resonance.</p>
             	</details>
             	<details>
-            		<summary>Why do all the markers start so close together?</summary>
-            		<p>When not playing, the markers are displayed at the median values across the whole clip.
-            		Because there's a wide range of values in most speech,
-            		this pushes the median towards the center.
-            		However, a small change in median values
-            		can have a big influence on how a voice is gendered</p>
+            		<summary data-i18n="help.faq2.q">Why do all the markers start so close together?</summary>
+            		<p data-i18n="help.faq2.a">When not playing, the markers are displayed at the median values across the whole clip.</p>
             	</details>
             	<details>
-            		<summary>Does this program support languages other than English?</summary>
-            		<p>Not currently. 
-            		If you add recording in another language, 
-            		you <em>might</em> get an output,
-            		but it will probably not be very accurate.</p>
+            		<summary data-i18n="help.faq3.q">Does this program support languages other than English?</summary>
+            		<p data-i18n="help.faq3.a">English and Mandarin Chinese are both supported.</p>
             	</details>
             	<details>
-            		<summary>Do accent and dialect affect pitch and resonance?</summary>
-            		<p>Yes, so you may wish to upload recordings of other speakers with your accent or dialect
-            		to better compare with your own voice.</p> 
+            		<summary data-i18n="help.faq4.q">Do accent and dialect affect pitch and resonance?</summary>
+            		<p data-i18n="help.faq4.a">Yes.</p>
             	</details>
             	<details>
-            		<summary>Ok, I can see my resonance now, but how do I actually change it?</summary>
-            		<p>There are several ways. One is to raise (brightening) or lower (darkening) your larynx.
-            		Your larynx raises when you swallow and lowers when you yawn.
-            		You may be able to feel it move if you put your hand over the front of your neck
-            		while you make one of these movements.
-            		If you can learn to control your larynx position in normal speech,
-            		it can have a big effect on your resonance.
-            		</p> 
-            		<p>
-            		Your resonance is also affected by the space in your mouth.
-            		Holding your tongue higher in your mouth as you speak will brighten your resonance,
-            		and holding it lower will darken it.
-            		</p>
+            		<summary data-i18n="help.faq5.q">Ok, I can see my resonance now, but how do I actually change it?</summary>
+            		<p data-i18n="help.faq5.a1">There are several ways.</p>
+            		<p data-i18n="help.faq5.a2">Your resonance is also affected by the space in your mouth.</p>
             	</details>
             	<details>
-            		<summary>Even though my pitch and resonance seem to be in the right spot,
-            		I don't feel like my voice sounds like I want it to.</summary>
-            		<p>There are many dimensions to voice other than pitch and resonance,
-            		so you might need to target other features.
-            		You might also be straining to reach a particular point,
-            		which can be audible to a listener.
-            		It might help to pick a less extreme target
-            		which you can reach comfortably.</p>
+            		<summary data-i18n="help.faq6.q">Even though my pitch and resonance seem to be in the right spot, I don't feel like my voice sounds like I want it to.</summary>
+            		<p data-i18n="help.faq6.a">There are many dimensions to voice other than pitch and resonance.</p>
             	</details>
-            	<details>
-            		<summary>Can I donate to encourage further development?</summary>
-            		<p>Yes! You can donate through any of the following platforms:</p>
-            		<ul>
-            			<li><a href="https://liberapay.com/lmcnulty">Liberapay</a> - Recurring donations, no extra fees, free-software focus
-            			<li><a href="https://ko-fi.com/lmcnulty">Ko-fi</a> - One-time or recurring donations, no extra fees 
-            			<li><a href="https://www.patreon.com/lmcnulty">Patreon</a> - Recurring donations, takes a cut
-            		</ul>
-            	</details>
-
-            	<h2>Credits</h2>
-            	<p>This application is developed by <a href="https://lmcnulty.me">Luna McNulty</a>
-            	as part of a research project for her Sc. M. program at Brown University.
-            	Its content is available under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
-            	and uses Creative-Commons-licensed sound files from
-            	Morgan and Christine Lemmer-Webber's podcast <a href="https://fossandcrafts.org">Foss and Crafts</a>
-            	as well as public domain content audiobook content from <a href="librivox.org">Librivox</a>.</p>
+            	<h2 data-i18n="help.credits">Credits</h2>
+            	<p data-i18n="help.creditsBody">This application is developed by Luna McNulty.</p>
             </section>
             				
             <!-- Details -->
@@ -1970,8 +1893,8 @@ to help us in our research.
             }
             </style>
             <section class="details"> 
-            	<h2 class='instructions'>Clip Details</h2>
-            	<div class='instructions'>
+            	<h2 class='instructions' data-i18n="details.heading">Clip Details</h2>
+            	<div class='instructions' data-i18n="details.instructions">
             		When you select a clip/point from the graph it will be displayed here.
             		If you just loaded the page and are seeing this,
             		your browser is downloading the examples
@@ -1984,12 +1907,12 @@ to help us in our research.
             		<div class="hbox">
             			<h2 id="preview-title"></h2>
             			<span class='buttons'>
-            				<span id='delete-confirm' class='hidden'>Press again to delete</span>
-            				<button class='delete' title='Delete Clip'><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+            				<span id='delete-confirm' class='hidden' data-i18n="details.deleteConfirm">Press again to delete</span>
+            				<button class='delete' title='Delete Clip' data-i18n-attr="title:details.deleteTitle"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
               <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
               <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
             </svg></button>
-            				<button class='download' title='Download Clip'><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+            				<button class='download' title='Download Clip' data-i18n-attr="title:details.downloadTitle"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
               <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
               <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
             </svg></button>
@@ -1999,18 +1922,18 @@ to help us in our research.
             		<table>
             			<tr>
             				<th></th>
-            				<th>Mean</th>
-            				<th>Median</th>
-            				<th>St. dev.</th>
+            				<th data-i18n="details.mean">Mean</th>
+            				<th data-i18n="details.median">Median</th>
+            				<th data-i18n="details.stdev">St. dev.</th>
             			</tr>
             			<tr>
-            				<th>Pitch</th>
+            				<th data-i18n="details.pitch">Pitch</th>
             				<td id='preview-mean-pitch'>--</td>
             				<td id='preview-median-pitch'>--</td>
             				<td class='highlight'><span id='preview-stdev-pitch'></span>*</td>
             			</tr>
             			<tr>
-            				<th>Resonance</th>
+            				<th data-i18n="details.resonance">Resonance</th>
             				<td id='preview-mean-resonance'>--</td>
             				<td id='preview-median-resonance'>--</td>
             				<td id='preview-stdev-resonance'>--</td>
@@ -2018,17 +1941,17 @@ to help us in our research.
             		</table>
             		<br>
             		<div>
-            			<label>Transcript</label>:
+            			<label for="preview-transcript" data-i18n="details.transcript">Transcript</label>:
             			<span id='preview-transcript'></span>
             		</div>
             		<details>
-            			<summary>Advanced</summary>
+            			<summary data-i18n="details.advanced">Advanced</summary>
 
-            			<button id='dl-json'>Download JSON</button>
+            			<button id='dl-json' data-i18n="details.dlJson">Download JSON</button>
             		</details>
             		<hr>
             		<div>
-            			<small>* In many contexts, greater variation in pitch (standard deviation) is 
+            			<small data-i18n="details.stdevNote">* In many contexts, greater variation in pitch (standard deviation) is
             			associated with women's speech, whereas monotone is associated with men's speech.
             			</small>
             		</div>
@@ -2041,12 +1964,12 @@ to help us in our research.
             		$('.details').classList.add('has-selection');
             		$('#preview-title').innerHTML = current.previewClip.title || '';
             		if (current.previewClip.meanPitch) {
-            			$('#preview-mean-pitch').innerHTML = Math.round(current.previewClip.meanPitch) + 'Hz';
-            			$('#preview-mean-resonance').innerHTML = Math.round(current.previewClip.meanResonance * 100) + '%';
-            			$('#preview-stdev-pitch').innerHTML = Math.round(current.previewClip.stdevPitch) + 'Hz';
-            			$('#preview-stdev-resonance').innerHTML = Math.round(current.previewClip.stdevResonance * 100) + '%';
-            			$('#preview-median-pitch').innerHTML = Math.round(current.previewClip.medianPitch) + 'Hz';
-            			$('#preview-median-resonance').innerHTML = Math.round(current.previewClip.medianResonance * 100) + '%';
+            			$('#preview-mean-pitch').innerHTML = Math.round(current.previewClip.meanPitch) + t('graph.pitchUnit');
+            			$('#preview-mean-resonance').innerHTML = Math.round(current.previewClip.meanResonance * 100) + t('graph.percentUnit');
+            			$('#preview-stdev-pitch').innerHTML = Math.round(current.previewClip.stdevPitch) + t('graph.pitchUnit');
+            			$('#preview-stdev-resonance').innerHTML = Math.round(current.previewClip.stdevResonance * 100) + t('graph.percentUnit');
+            			$('#preview-median-pitch').innerHTML = Math.round(current.previewClip.medianPitch) + t('graph.pitchUnit');
+            			$('#preview-median-resonance').innerHTML = Math.round(current.previewClip.medianResonance * 100) + t('graph.percentUnit');
             		}
             		if (current.previewClip.transcript) {
             			$('#preview-transcript').innerHTML = current.previewClip.transcript;
@@ -2138,13 +2061,13 @@ to help us in our research.
             		#upload-file:checked   + label + div { display: block;}
             	</style>
 
-            	<h2>Add a Clip</h2>
+            	<h2 data-i18n="newClip.heading">Add a Clip</h2>
 
             	<div class="hbox">
-            		<label for="title-input">Title</label>
+            		<label for="title-input" data-i18n="newClip.title">Title</label>
             		<input type="text" id="title-input" value="Untitled"/>
 
-            		<label for="color-select">Color</label>
+            		<label for="color-select" data-i18n="newClip.color">Color</label>
             		<input type="color" id="color-select" value="#000000"/>
             	</div>
 
@@ -2152,7 +2075,7 @@ to help us in our research.
 
             	<!-- Language + Script selection -->
             	<div class="hbox">
-            		<label for="lang-select">Language</label>
+            		<label for="lang-select" data-i18n="newClip.language">Language</label>
             		<select id="lang-select">
             			<option value="en">English</option>
             			<option value="zh">中文</option>
@@ -2160,7 +2083,7 @@ to help us in our research.
             	</div>
             	<br>
             	<div class="hbox">
-            		<label for="script-select">Script </label>
+            		<label for="script-select" data-i18n="newClip.script">Script </label>
             		<select class="script" id="script-select">
             			
             	<option data-lang="en" value="When the sunlight strikes raindrops in the air, they act as a prism and form a rainbow. The rainbow is a division of white light into many beautiful colors. These take the shape of a long round arch, with its path high above, and its two ends apparently beyond the horizon. There is , according to legend, a boiling pot of gold at one end. People look, but no one ever finds it."
@@ -2254,8 +2177,14 @@ to help us in our research.
             	<option data-lang="zh" value="当阳光照射到空气中的雨滴时，它们就像棱镜一样，将白光分解成许多美丽的颜色，形成彩虹。彩虹呈现出长长的圆弧形，路径高悬于天空之上，两端似乎延伸至地平线以外。传说中，彩虹的一端藏着一锅沸腾的黄金。人们不断寻找，却从未有人真正找到它。"
             	>彩虹（标准朗读段）</option>
 
-            	<option data-lang="zh" value="我爱我的祖国，爱我们伟大的人民。山川秀美，江河奔流，大地宽广无边。春天花开满山，夏天绿树成荫，秋天硕果累累，冬天白雪皑皑。我们生活在这片土地上，共同创造美好的未来，共同守护我们的家园。"
-            	>我爱祖国</option>
+            	<option data-lang="zh" value="四是四，十是十，十四是十四，四十是四十。谁说四十是细席，就打他的嘴。谁说十四是适时，就撕他的皮。"
+            	>绕口令·平翘舌</option>
+
+            	<option data-lang="zh" value="八百标兵奔北坡，炮兵并排北边跑。炮兵怕把标兵碰，标兵怕碰炮兵炮。"
+            	>绕口令·八百标兵</option>
+
+            	<option data-lang="zh" value="人人都希望拥有一个幸福美满的家庭；而朋友，可以说是这个家庭不可缺少的组成部分。把忠实的朋友看作是生命的良药，是最恰当不过的比方了。"
+            	>普通话测试·朋友</option>
 
             	<option data-lang="zh" value="明月几时有，把酒问青天。不知天上宫阙，今夕是何年。我欲乘风归去，又恐琼楼玉宇，高处不胜寒。起舞弄清影，何似在人间。转朱阁，低绮户，照无眠。不应有恨，何事长向别时圆。人有悲欢离合，月有阴晴圆缺，此事古难全。但愿人长久，千里共婵娟。"
             	>苏轼：水调歌头</option>
@@ -2313,24 +2242,24 @@ to help us in our research.
 
             	<!-- Upload Options -->
             	<input type="radio" name="add-recording" id="upload-file" checked>
-            	<label for="upload-file">Upload a file</label>
+            	<label for="upload-file" data-i18n="newClip.uploadFile">Upload a file</label>
             	<div>
-            		<input type='file' id='audio-file-input' name='recording' 
+            		<input type='file' id='audio-file-input' name='recording'
             		capture="user" accept="audio/*,video/*,audio/mpeg,audio/mp4,audio/x-aiff,audio/ogg,audio/vorbis,audio/opus,audio/vnd.wav,.wav,.mp3,.ogg,.opus,.m4a,.webm"/>
             	</div>
             	<br>
             	<input type="radio" name="add-recording" id="record-voice">
-            	<label for="record-voice">Record your voice</label>
+            	<label for="record-voice" data-i18n="newClip.recordVoice">Record your voice</label>
             	<div>
-            		<button id="start-recording">⏺︎ Start</button>
-            		<button id="stop-recording">⏹︎ Stop</button>
-            		Recorded <span id="recording-count">0</span> seconds
+            		<button id="start-recording" data-i18n="newClip.start">⏺︎ Start</button>
+            		<button id="stop-recording" data-i18n="newClip.stop">⏹︎ Stop</button>
+            		<span data-i18n="newClip.recordedPrefix">Recorded</span> <span id="recording-count">0</span> <span data-i18n="newClip.recordedSuffix">seconds</span>
             		<br>
             		<br>
             		<audio controls id="recording-preview"></audio>
             	</div>
             	<!-- Submit -->
-            	<button id="submit" class='attention' onclick="submitAudio()">Add Clip</button>
+            	<button id="submit" class='attention' onclick="submitAudio()" data-i18n="newClip.submit">Add Clip</button>
             	<script>
             	try {
             		// record from their microphone in-browser,
@@ -2362,17 +2291,8 @@ to help us in our research.
             			function alertRecordingFailure(exception) {
             				alert(
             					String(window.location).slice(0, 5) == 'https'
-            					?
-            						  "Sorry, something went wrong. " 
-            						+ "Please ensure that your microphone is connected "
-            						+ "and that your browser allows us to record from it. "
-            						+ "Alternately, you can try uploading a file recorded from a native app instead."
-            					:
-            						  "Recording in-browser is only available "
-            						+ "when accessing the site over a secure connection. "
-            						+ "To record, reload the page ensuring "
-            						+ "that the URL starts with 'https', "
-            						+ "including the 's' at the end."
+            					? t('alert.recordingHttps')
+            					: t('alert.recordingHttp')
             				);
             				console.error(exception);
             			}
@@ -2425,7 +2345,7 @@ to help us in our research.
             			clip.color = $('#color-select').value;
 
             			if ($('#upload-file').checked) {
-            				fileInput = $('#audio-file-input')
+            				let fileInput = $('#audio-file-input')
             				if (fileInput.files.length < 1) return
 
             				let recording = fileInput.files[0];
@@ -2433,10 +2353,14 @@ to help us in our research.
             				clip.loadAudioFile(recording);
 
             			} else if ($('#record-voice').checked) {
+            				if (!recordedAudio) {
+            					alert(t('alert.stopRecordingFirst'));
+            					return;
+            				}
             				formData.append('recording', recordedAudio);
             				clip.loadAudioFile(recordedAudio);
             			} else {
-            				alert('Please upload a file or make a recording.');
+            				alert(t('alert.uploadOrRecord'));
             				return;
             			}
 
@@ -2448,16 +2372,24 @@ to help us in our research.
             			fetch('./backend.cgi', { method: 'POST', body: formData})
             			.then(response => {
             				if (!response.ok) throw new Error(response.status);
-            				const cl = response.headers.get('Content-Length');
-            				if (cl !== null && Number(cl) < 2) return {};
-            				return response.json();
+            				return response.text().then(txt => {
+            					if (!txt) return {};
+            					try { return JSON.parse(txt); }
+            					catch (e) {
+            						console.error('backend returned non-JSON:', txt);
+            						throw new Error('Non-JSON response: ' + txt.slice(0, 200));
+            					}
+            				});
             			}).then(data => {
+            				console.log('backend response data:', data);
             				$('button.new-clip').classList.remove('hidden');
             				$('button.new-clip + .spinner').classList.add('hidden');
 
-            				if (!data.hasOwnProperty('phones') || data.phones.length === 0) {
-						throw new Error(data.error || 'Backend returned no phone data');
-					}
+            				if (data.error) {
+            					console.error('backend error:', data.error, '\n', data.trace);
+            					throw new Error(data.error);
+            				}
+            				console.assert(data.hasOwnProperty('phones') && data.phones.length > 0);
             				
             				clip.loadResponse(data);
             				globalState.mutate('clips', clips => clips.push(clip));
@@ -2465,20 +2397,15 @@ to help us in our research.
             				globalState.set('playingClip', clip);
             				globalState.set('previewClip', clip);
 
-            			}).catch(() => {
-            				alert(
-            					"Sorry, we weren't able to process your recording. " +
-            					"Make sure to speak clearly and ensure " +
-            					"that your transcript matches the audio. " +
-            					"For increased chance of success," +
-            					"try using short clips with a 1-second period of silence."
-            				);
+            			}).catch((err) => {
+            				console.error('submitAudio failed:', err);
+            				alert(t('alert.processFailed'));
             				$('button.new-clip').classList.remove('hidden');
             				$('button.new-clip + .spinner').classList.add('hidden');
             			});
             		}
             	} catch (exception) {
-            		alert("An unknown error occured.");
+            		alert(t('alert.unknown'));
             		console.error(exception);
             	}
             	</script>
