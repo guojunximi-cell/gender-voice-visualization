@@ -10,7 +10,7 @@ class VoiceGraph {
 		element.style.boxSizing = 'border-box'
 		let size = element.clientWidth;
 
-		this.pitchUpperBoundHz = 500;
+		this.pitchUpperBoundHz = 400;
 		this.pitchLowerBoundHz = 50;
 		this.pitchRange = this.pitchUpperBoundHz - this.pitchLowerBoundHz;
 
